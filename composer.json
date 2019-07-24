@@ -1,0 +1,32 @@
+{
+    "name": "sch-group/pickpoint",
+    "description": "Russian PickPoint delivery service api connector",
+    "type": "library",
+    "require": {
+        "php": "^7.0",
+        "guzzlehttp/guzzle": "^6.2",
+        "predis/predis": "^1.1.1"
+    },
+    "require-dev": {
+        "predis/predis": "1.1.1",
+        "piwik/ini": "^2.0",
+        "phpunit/phpunit": "~6.5.5"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "aahmetgaliev",
+            "email": "ainur_ahmetgaliev@mail.ru"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "PickPointSdk\\" : "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PickPointSdk\\Tests\\": "tests/"
+        }
+    }
+}
