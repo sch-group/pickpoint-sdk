@@ -19,16 +19,23 @@ interface DeliveryConnector
     /**
      * Returns invoice data and create shipment/order in delivery service
      * @param Invoice $invoice
+     * @param bool $returnInvoiceNumberOnly
      * @return mixed
      */
     public function createShipment(Invoice $invoice);
 
     /**
-     * Returns current delivery status
-     * @param string $invoiceNumber
+     * @param Invoice $invoice
      * @return mixed
      */
-    public function getStatus(string $invoiceNumber);
+    public function createShipmentWithInvoice(Invoice $invoice) : Invoice;
+    /**
+     * Returns current delivery status
+     * @param string $invoiceNumber
+     * @param string $orderNumber
+     * @return mixed
+     */
+    public function getStatus(string $invoiceNumber, string $orderNumber = '');
 
     /**
      * @param string $invoiceNumber
@@ -58,6 +65,17 @@ interface DeliveryConnector
      */
     public function printLabel(array $invoiceNumbers);
 
+    /**
+     * @param array $invoiceNumbers
+     * @return mixed
+     */
+    public function makeReceipt(array $invoiceNumbers);
+
+    /**
+     * @param array $invoiceNumbers
+     * @return mixed
+     */
+    public function makeReceiptAndPrint(array $invoiceNumbers);
     /**
      * Print reestr/receipt
      * @param string $identifier
