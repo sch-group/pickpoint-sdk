@@ -42,7 +42,7 @@ class CreateInvoiceTest extends InitTest
         $response = $this->client->createShipment($invoice);
 
         $this->assertEquals($response['CreatedSendings'][0]['SenderCode'], $senderCode);
-        print_r($response);
+
     }
 
     public function testCreatePaidWithClientReturnAddressInvoice()

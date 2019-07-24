@@ -5,6 +5,7 @@ composer require sch-group/pickpoint
 ```
 Примеры: 
 
+Инициализация
 ```
 $config = [
  'host' => '',
@@ -19,7 +20,23 @@ $senderDestination = new SenderDestination('Москва', 'Московская
 
 $client = new PickPointConnector(new PickPointConf($config), $senderDestination, $defaultPackageSize);
  
-$points = $client->getPoints(); // получить массив поставматов
+ 
+Так же можно добавить кэширование, для ускорения запроса на авторизацию 
+$redisCacheConf = [
+ 'host' => '127.0.0.1',
+ 'port' => 6379
+];
+
+$client = new PickPointConnector(new PickPointConf($config), $senderDestination, $defaultPackageSize, $redisCacheConf);
+
+ 
+```
+
+
+Получение массива постаматов
+
+```
+$points = $client->getPoints(); // get postamats list
 
 ```
 Цены за доставку
@@ -39,9 +56,9 @@ $invoice = new Invoice();
 $invoice->setSenderCode('order: 123456');
 $invoice->setPostamatNumber('5602-009');
 $invoice->setDescription('Custom zakaz');
-$invoice->setRecipientName('Айнур');
-$invoice->setMobilePhone('+79274269594');
-$invoice->setEmail('ainur_ahmetgalie@mail.ru');
+$invoice->setRecipientName('Саша');
+$invoice->setMobilePhone('+79274269590');
+$invoice->setEmail('kek@mail.ru');
 $invoice->setPostageType('unpiad'); // paid or unpaid
 $invoice->setGettingType('sc'); // courier or sc
 $invoice->setSum(500.00);
@@ -57,7 +74,7 @@ $product->setProductCode('1231');
 $invoice->setProducts([$product]);
 $address = new Address();
 $address->setCityName('Казань');
-$address->setPhoneNumber('+79274269594');
+$address->setPhoneNumber('+79274269590');
 $invoice->setClientReturnAddress($address);
 $response = $client->createShipment($invoice);
 ```

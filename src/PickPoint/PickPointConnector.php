@@ -41,17 +41,29 @@ class PickPointConnector implements DeliveryConnector
     private $defaultPackageSize;
 
     /**
+     * @var \Predis\Client $redisCache
+     */
+    private $redisCache;
+
+    /**
      * PickPointConnector constructor.
      * @param PickPointConf $pickPointConf
      * @param SenderDestination|null $senderDestination
      * @param PackageSize|null $packageSize
+     * @param array $predisConf
      */
-    public function __construct(PickPointConf $pickPointConf, SenderDestination $senderDestination, PackageSize $packageSize = null)
+    public function __construct(
+        PickPointConf $pickPointConf,
+        SenderDestination $senderDestination,
+        PackageSize $packageSize = null,
+        array $predisConf = []
+    )
     {
         $this->client = new Client();
         $this->pickPointConf = $pickPointConf;
         $this->senderDestination = $senderDestination;
         $this->defaultPackageSize = $packageSize;
+        $this->redisCache = !empty($predisConf) ? new \Predis\Client($predisConf) : null;
     }
 
     /**
@@ -60,7 +72,11 @@ class PickPointConnector implements DeliveryConnector
      */
     private function auth()
     {
+        if (!empty($this->redisCache) && !empty($this->redisCache->get(self::CACHE_SESSION_KEY))) {
+            return $this->redisCache->get(self::CACHE_SESSION_KEY);
+        }
         $loginUrl = $this->pickPointConf->getHost() . '/login';
+
         try {
             $request = $this->client->post($loginUrl, [
                 'json' => [
@@ -69,6 +85,11 @@ class PickPointConnector implements DeliveryConnector
                 ],
             ]);
             $response = json_decode($request->getBody()->getContents(), true);
+
+            if (!empty($this->redisCache)) {
+                $this->redisCache->setex(self::CACHE_SESSION_KEY,  self::CACHE_SESSION_LIFE_TIME, $response['SessionId']);
+            }
+
         } catch (\Exception $exception) {
             throw new PickPointMethodCallException($loginUrl, $exception->getMessage());
         }
@@ -83,18 +104,17 @@ class PickPointConnector implements DeliveryConnector
      */
     public function getPoints()
     {
-        $sessionId = $this->auth();
-        $postamatsUrl = $this->pickPointConf->getHost() . '/clientpostamatlist';
+        $url = $this->pickPointConf->getHost() . '/clientpostamatlist';
 
-        $request = $this->client->post($postamatsUrl, [
+        $request = $this->client->post($url, [
             'json' => [
-                'SessionId' => $sessionId,
+                'SessionId' => $this->auth(),
                 'IKN' => $this->pickPointConf->getIKN(),
             ],
         ]);
         $response = json_decode($request->getBody()->getContents(), true);
 
-        $this->checkMethodException($response, $postamatsUrl);
+        $this->checkMethodException($response, $url);
 
         return $response;
     }
