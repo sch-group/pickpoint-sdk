@@ -8,6 +8,9 @@ use PickPointSdk\PickPoint\PickPointConnector;
 
 class AuthTest extends InitTest
 {
+    /**
+     * @var PickPointConnector $client
+     */
     protected $client;
 
     public function testPickPointAuthAndPostamatsGetting()
@@ -21,7 +24,7 @@ class AuthTest extends InitTest
      */
     public function testAuthException()
     {
-        $client = new PickPointConnector(new PickPointConf([]), new SenderDestination('',''));
+        $client = new PickPointConnector(new PickPointConf('', '', '', ''), new SenderDestination('',''));
         $client->getPoints();
         $this->expectException(\PickPointSdk\Exceptions\PickPointMethodCallException::class);
     }

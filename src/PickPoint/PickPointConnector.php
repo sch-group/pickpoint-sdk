@@ -9,6 +9,7 @@ use PickPointSdk\Components\InvoiceValidator;
 use PickPointSdk\Components\PackageSize;
 use PickPointSdk\Components\ReceiverDestination;
 use PickPointSdk\Components\SenderDestination;
+use PickPointSdk\Components\State;
 use PickPointSdk\Components\TariffPrice;
 use PickPointSdk\Contracts\DeliveryConnector;
 use PickPointSdk\Exceptions\PickPointMethodCallException;
@@ -197,7 +198,7 @@ class PickPointConnector implements DeliveryConnector
      * @throws PickPointMethodCallException
      * @throws ValidateException
      */
-    public function createShipment(Invoice $invoice)
+    public function createShipment(Invoice $invoice) : array
     {
 
         $url = $this->pickPointConf->getHost() . '/CreateShipment';
@@ -284,7 +285,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function getStatus(string $invoiceNumber, string $orderNumber = '')
+    public function getState(string $invoiceNumber, string $orderNumber = '') : State
     {
 
         $url = $this->pickPointConf->getHost() . '/tracksending';
@@ -300,7 +301,9 @@ class PickPointConnector implements DeliveryConnector
 
         $this->checkMethodException($response, $url);
 
-        return $response[0] ?? [];
+        $response = $response[0] ?? [];
+
+        return new State($response['State'] ?? 0, $response['StateMessage']?? '');
     }
 
     /**
@@ -331,7 +334,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function printLabel(array $invoiceNumbers)
+    public function printLabel(array $invoiceNumbers) : string
     {
         $invoices = !empty($invoices) ? $invoices : [];
 
@@ -355,7 +358,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function makeReceipt(array $invoiceNumbers)
+    public function makeReceipt(array $invoiceNumbers) : array
     {
 
         $url = $this->pickPointConf->getHost() . '/makereestrnumber';
@@ -387,7 +390,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function printReceipt(string $identifier)
+    public function printReceipt(string $identifier) : string
     {
         $url = $this->pickPointConf->getHost() . '/getreestr';
         $array = [
@@ -409,7 +412,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function makeReceiptAndPrint(array $invoiceNumbers)
+    public function makeReceiptAndPrint(array $invoiceNumbers) : string
     {
         $url = $this->pickPointConf->getHost() . '/makereestr';
         $array = [
@@ -454,6 +457,27 @@ class PickPointConnector implements DeliveryConnector
         return $response;
     }
 
+    /**
+     * @return array
+     * @throws PickPointMethodCallException
+     */
+    public function getStates() : array
+    {
+        $url = $this->pickPointConf->getHost() . '/getstates';
+
+        $request = $this->client->get($url);
+
+        $response = json_decode($request->getBody()->getContents(), true);
+
+        $this->checkMethodException($response, $url);
+
+        $states = [];
+        foreach ($response as $state) {
+            $states[] = new State($state['State'] ?? 0, $state['StateText'] ?? '');
+        }
+
+        return $states;
+    }
     /**
      * @param $response
      * @param $urlCall

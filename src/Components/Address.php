@@ -39,7 +39,7 @@ class Address
     /**
      * @var string
      */
-    private $phoneNumber; // required
+    private $phoneNumber;
 
     /**
      * @var string
@@ -81,7 +81,7 @@ class Address
     /**
      * @return string
      */
-    public function getAddress()
+    public function getAddress() : string
     {
         return $this->address ?? '';
     }
@@ -161,7 +161,7 @@ class Address
     /**
      * @return string
      */
-    public function getComment()
+    public function getComment() : string
     {
         return $this->comment ?? '';
     }
@@ -174,7 +174,7 @@ class Address
         $this->comment = $comment;
     }
 
-    public function transformToArray()
+    public function transformToArray() : array
     {
         return [
           'CityName' => $this->getCityName(),

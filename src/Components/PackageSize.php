@@ -44,7 +44,7 @@ class PackageSize
     /**
      * @return int
      */
-    public function getWidth()
+    public function getWidth() : int
     {
         return $this->width;
     }
@@ -52,7 +52,7 @@ class PackageSize
     /**
      * @return int
      */
-    public function getDepth()
+    public function getDepth() : int
     {
         return $this->depth;
     }
@@ -60,7 +60,7 @@ class PackageSize
     /**
      * @return int
      */
-    public function getLength()
+    public function getLength() : int
     {
         return $this->length;
     }
@@ -68,7 +68,7 @@ class PackageSize
     /**
      * @return int
      */
-    public function getWeight()
+    public function getWeight() : int
     {
         return $this->weight;
     }

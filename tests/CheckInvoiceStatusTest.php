@@ -14,9 +14,13 @@ class CheckInvoiceStatusTest extends InitTest
     {
         $invoice = $this->createInvoice();
         $invoiceNumber = $invoice->getInvoiceNumber();
-        $status = $this->client->getStatus($invoiceNumber);
-        $this->assertNotEmpty($status['State']);
-        $this->assertNotEmpty($status['StateMessage']);
+
+        $state = $this->client->getState($invoiceNumber);
+        $this->assertNotEmpty($state->getState());
+        $this->assertNotEmpty($state->getStateText());
+        $this->assertEquals(101, $state->getState());
+        $this->assertEquals('Зарегистрирован', $state->getStateText());
+
     }
 
     private function createInvoice()

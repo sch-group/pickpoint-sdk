@@ -2,11 +2,12 @@
 
 namespace PickPointSdk\Contracts;
 
+use PickPointSdk\Components\State;
 use PickPointSdk\Components\Invoice;
 use PickPointSdk\Components\PackageSize;
-use PickPointSdk\Components\ReceiverDestination;
-use PickPointSdk\Components\SenderDestination;
 use PickPointSdk\Components\TariffPrice;
+use PickPointSdk\Components\SenderDestination;
+use PickPointSdk\Components\ReceiverDestination;
 
 interface DeliveryConnector
 {
@@ -19,7 +20,6 @@ interface DeliveryConnector
     /**
      * Returns invoice data and create shipment/order in delivery service
      * @param Invoice $invoice
-     * @param bool $returnInvoiceNumberOnly
      * @return mixed
      */
     public function createShipment(Invoice $invoice);
@@ -35,7 +35,7 @@ interface DeliveryConnector
      * @param string $orderNumber
      * @return mixed
      */
-    public function getStatus(string $invoiceNumber, string $orderNumber = '');
+    public function getState(string $invoiceNumber, string $orderNumber = '') : State;
 
     /**
      * @param string $invoiceNumber
@@ -63,32 +63,37 @@ interface DeliveryConnector
      * @param array $invoiceNumbers
      * @return mixed
      */
-    public function printLabel(array $invoiceNumbers);
+    public function printLabel(array $invoiceNumbers) : string ;
 
     /**
      * Create Reestr
      * @param array $invoiceNumbers
      * @return mixed
      */
-    public function makeReceipt(array $invoiceNumbers);
+    public function makeReceipt(array $invoiceNumbers) : array;
 
     /**
-     *
+     * Creates reestr and returns pdf byte code
      * @param array $invoiceNumbers
      * @return mixed
      */
-    public function makeReceiptAndPrint(array $invoiceNumbers);
+    public function makeReceiptAndPrint(array $invoiceNumbers) : string;
     /**
      * Print reestr/receipt
      * @param string $identifier
      * @return mixed
      */
-    public function printReceipt(string $identifier);
+    public function printReceipt(string $identifier) : string ;
 
     /**
      * @param string $invoiceNumber
      * @return mixed
      */
     public function removeInvoiceFromReceipt(string $invoiceNumber);
+
+    /**
+     * @return array
+     */
+    public function getStates(): array;
 
 }

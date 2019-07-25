@@ -12,11 +12,6 @@ use PickPointSdk\PickPoint\PickPointConnector;
 class InitTest extends TestCase
 {
     /**
-     * @var PickPointConf $pickPointConf
-     */
-    protected $pickPointConf;
-
-    /**
      * @var PickPointConnector $client
      */
     protected $client;
@@ -26,14 +21,14 @@ class InitTest extends TestCase
         parent::__construct($name, $data, $dataName);
         $reader = new IniReader();
         $config = $reader->readFile(__DIR__ . '/config.ini');
-        $this->pickPointConf = new PickPointConf($config);
+        $pickPointConf = new PickPointConf($config['host'], $config['login'], $config['password'], $config['ikn']);
         $defaultPackageSize = new PackageSize(20, 20,20);
         $senderDestination = new SenderDestination($config['city_from'], $config['region_from']);
-//        $redisConf = [
-//          'host' => $config['redis_host'],
-//          'port' => $config['redis_port']
-//        ];
-        $this->client = new PickPointConnector($this->pickPointConf, $senderDestination, $defaultPackageSize);
+        $redisConf = [
+          'host' => $config['redis_host'],
+          'port' => $config['redis_port']
+        ];
+        $this->client = new PickPointConnector($pickPointConf, $senderDestination, $defaultPackageSize, $redisConf);
     }
 
 }

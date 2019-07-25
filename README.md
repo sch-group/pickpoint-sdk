@@ -14,11 +14,13 @@ $config = [
  'ikn' => '',
 ];    
 
+$pickPointConf = new PickPointConf($config['host'], $config['login'], $config['password'], $config['ikn']);
+
 $defaultPackageSize = new PackageSize(20, 20,20); // может быть null
 
 $senderDestination = new SenderDestination('Москва', 'Московская обл.'); // Адрес отправителя
 
-$client = new PickPointConnector(new PickPointConf($config), $senderDestination, $defaultPackageSize);
+$client = new PickPointConnector($pickPointConf, $senderDestination, $defaultPackageSize);
  
  
 Так же можно добавить кэширование, для ускорения запроса на авторизацию 
@@ -96,9 +98,20 @@ $invoice = $client->createShipmentWithInvoice($invoice);
 $invoiceNumber = $invoice->getInvoiceNumber();
 $pdfByteCode = $this->client->makeReceiptAndPrint(array($invoiceNumber));
 ```
+Удалить инвойс из реестра
+```
+ $remove = $this->client->removeInvoiceFromReceipt($invoiceNumber);
+```
 Проверка статуса отправлений
 
 ```
 $invoiceNumber = $invoice->getInvoiceNumber();
 $status = $client->getStatus($invoiceNumber);
+$status->getState();
+$status->getStateText();
+```
+Получить все статусы
+
+```
+$states = $client->getStates();
 ```

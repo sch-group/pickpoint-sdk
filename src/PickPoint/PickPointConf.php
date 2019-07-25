@@ -24,16 +24,19 @@ class PickPointConf
 
     /**
      * PickPointConf constructor.
-     * @param array $config
+     * @param string $host
+     * @param string $login
+     * @param string $password
+     * @param string $ikn
      */
-    public function __construct(array $config)
+    public function __construct(string $host, string $login, string $password, string $ikn)
     {
-
-        $this->host = $config['host'] ?? '';
-        $this->login = $config['login'] ?? '';
-        $this->password = $config['password'] ?? '';
-        $this->ikn = $config['ikn'] ?? '';
+        $this->host = $host;
+        $this->login = $login;
+        $this->password = $password;
+        $this->ikn = $ikn;
     }
+
 
     /**
      * @return string
