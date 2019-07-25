@@ -38,12 +38,7 @@ class CheckInvoiceStatusTest extends InitTest
         $packageSize = new PackageSize(20, 20, 20);
         $invoice->setPackageSize($packageSize);
 
-        $product = new Product();
-        $product->setDescription('Test product');
-        $product->setPrice(200);
-        $product->setQuantity(1);
-        $product->setName('Tovar 1');
-        $product->setProductCode('1231');
+        $product = new Product('number 234', 'Test', 2, 100);
 
         $invoice->setProducts([$product]);
 

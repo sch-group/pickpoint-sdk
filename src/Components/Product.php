@@ -4,143 +4,128 @@ namespace PickPointSdk\Components;
 
 class Product
 {
+    /**
+     * @var string
+     */
     private $productCode;
 
-    private $goodsCode;
-
+    /**
+     * @var string
+     */
     private $name;
 
-    private $price;
-
+    /**
+     * @var int
+     */
     private $quantity;
 
-    private $vat;
-
-    private $description;
-
+    /**
+     * @var float
+     */
+    private $price;
 
     /**
-     * @return mixed
+     * @var string
      */
-    public function getProductCode()
+    private $goodsCode;
+
+    /**
+     * @var float
+     */
+    private $vat;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    /**
+     * Product constructor.
+     * @param string $productCode
+     * @param string $name
+     * @param int $quantity
+     * @param float $price
+     * @param string $goodsCode
+     * @param float $vat
+     * @param string $description
+     */
+    public function __construct(string $productCode, string $name, int $quantity, float $price, string $goodsCode = '', float $vat = 0, string $description = '')
+    {
+        $this->productCode = $productCode;
+        $this->name = $name;
+        $this->quantity = $quantity;
+        $this->price = $price;
+        $this->goodsCode = $goodsCode;
+        $this->vat = $vat;
+        $this->description = $description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProductCode(): string
     {
         return $this->productCode;
     }
 
     /**
-     * @param mixed $productCode
+     * @return string
      */
-    public function setProductCode($productCode)
-    {
-        $this->productCode = $productCode;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGoodsCode()
-    {
-        return $this->goodsCode;
-    }
-
-    /**
-     * @param mixed $goodsCode
-     */
-    public function setGoodsCode($goodsCode)
-    {
-        $this->goodsCode = $goodsCode;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @param mixed $name
+     * @return int
      */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    /**
-     * @param mixed $price
-     */
-    public function setPrice($price)
-    {
-        $this->price = $price;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getQuantity()
+    public function getQuantity(): int
     {
         return $this->quantity;
     }
 
     /**
-     * @param mixed $quantity
+     * @return float
      */
-    public function setQuantity($quantity)
+    public function getPrice(): float
     {
-        $this->quantity = $quantity;
+        return $this->price;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getVat()
+    public function getGoodsCode(): string
     {
-        return $this->vat;
+        return $this->goodsCode ?? '';
     }
 
     /**
-     * @param mixed $vat
+     * @return float
      */
-    public function setVat($vat)
+    public function getVat(): float
     {
-        $this->vat = $vat;
+        return $this->vat ?? 0;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
-        return $this->description;
+        return $this->description ?? 0;
     }
 
-    /**
-     * @param mixed $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    public function getProductArray()
+    public function toArray()
     {
         return [
-            'ProductCode' => $this->getProductCode() ?? '',
-            'GoodsCode' => $this->getGoodsCode() ?? '',
-            'Name' => $this->getName() ?? '',
-            'Price' => $this->getPrice() ?? '',
-            'Quantity' => $this->getQuantity() ?? '',
-            'Vat' => $this->getVat() ?? '0',
-            'Description' => $this->getDescription() ?? ''
+            'ProductCode' => $this->getProductCode(),
+            'GoodsCode' => $this->getGoodsCode(),
+            'Name' => $this->getName(),
+            'Price' => $this->getPrice(),
+            'Quantity' => $this->getQuantity(),
+            'Vat' => $this->getVat(),
+            'Description' => $this->getDescription()
         ];
     }
 }

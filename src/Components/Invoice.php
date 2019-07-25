@@ -165,7 +165,7 @@ class Invoice
      */
     public function getInvoiceNumber() : string
     {
-        return $this->invoiceNumber;
+        return $this->invoiceNumber ?? '';
     }
 
     /**
@@ -181,7 +181,7 @@ class Invoice
      */
     public function getBarCode() : string
     {
-        return $this->barCode;
+        return $this->barCode ?? '';
     }
 
     /**
@@ -197,7 +197,7 @@ class Invoice
      */
     public function getSenderCode() : string
     {
-        return $this->senderCode;
+        return $this->senderCode ?? '';
     }
 
     /**
@@ -225,11 +225,11 @@ class Invoice
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getRecipientName() : string
     {
-        return $this->recipientName;
+        return $this->recipientName ?? '';
     }
 
     /**
@@ -237,7 +237,7 @@ class Invoice
      */
     public function setRecipientName(string $recipientName)
     {
-        $this->recipientName = $recipientName;
+        $this->recipientName = $recipientName ?? '';
     }
 
     /**
@@ -245,7 +245,7 @@ class Invoice
      */
     public function getPostamatNumber() : string
     {
-        return $this->postamatNumber;
+        return $this->postamatNumber ?? '';
     }
 
     /**
@@ -261,7 +261,7 @@ class Invoice
      */
     public function getMobilePhone() : string
     {
-        return $this->mobilePhone;
+        return $this->mobilePhone ?? '';
     }
 
     /**
@@ -277,7 +277,7 @@ class Invoice
      */
     public function getEmail() : string
     {
-        return $this->email;
+        return $this->email ?? '';
     }
 
     /**
@@ -293,7 +293,7 @@ class Invoice
      */
     public function getPostageType() : string
     {
-        return $this->postageType;
+        return $this->postageType ?? '';
     }
 
     /**
@@ -312,7 +312,7 @@ class Invoice
      */
     public function getGettingType() : string
     {
-        return $this->gettingType;
+        return $this->gettingType ?? '';
     }
 
     /**
@@ -328,7 +328,7 @@ class Invoice
      */
     public function getSum() : float
     {
-        return $this->sum;
+        return $this->sum ?? 0;
     }
 
     /**
@@ -344,7 +344,7 @@ class Invoice
      */
     public function getPrepaymentSum() : float
     {
-        return $this->prepaymentSum;
+        return $this->prepaymentSum ?? 0;
     }
 
     /**
@@ -440,6 +440,9 @@ class Invoice
      */
     public function getPackageSize(): PackageSize
     {
+        if($this->packageSize == null) {
+            return new PackageSize(0,0,0);
+        }
         return $this->packageSize;
     }
 
@@ -457,11 +460,11 @@ class Invoice
     public function getProducts() : array
     {
         $products = [];
-        foreach ($this->products as $product) {
+        foreach ($this->products ?? [] as $product) {
             /**
              * @var Product $product
              */
-            $products[] = $product->getProductArray();
+            $products[] = $product->toArray();
         }
         return $products;
     }
@@ -515,9 +518,9 @@ class Invoice
     }
 
     /**
-     * @param mixed $gcBarCode
+     * @param string $gcBarCode
      */
-    public function setGcBarCode($gcBarCode)
+    public function setGcBarCode(string $gcBarCode)
     {
         $this->gcBarCode = $gcBarCode;
     }
@@ -542,7 +545,7 @@ class Invoice
      * @return mixed
      * @throws \Exception
      */
-    public function getEdtn()
+    public function getEdtn() : string
     {
         if (empty($this->edtn)) {
             return (new \DateTime('now'))->getTimestamp();

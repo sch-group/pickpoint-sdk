@@ -6,109 +6,132 @@ namespace PickPointSdk\Components;
 
 class TariffPrice
 {
-
+    /**
+     * @var int
+     */
     private $priorityMaxDay;
 
+    /**
+     * @var int
+     */
     private $priorityMinDay;
-
+    /**
+     * @var int
+     */
     private $standardMaxDay;
 
+    /**
+     * @var int
+     */
     private $standardMinDay;
 
+    /**
+     * @var int
+     */
     private $zone;
 
+    /**
+     * @var string
+     */
     private $errorMessage;
 
+    /**
+     * @var int
+     */
     private $errorCode;
 
+    /**
+     * @var array
+     */
     private $prices;
 
-    public function __construct(array $response)
+    /**
+     * TariffPrice constructor.
+     * @param int $priorityMaxDay
+     * @param int $priorityMinDay
+     * @param int $standardMaxDay
+     * @param int $standardMinDay
+     * @param int $zone
+     * @param string $errorMessage
+     * @param int $errorCode
+     * @param array $prices
+     */
+    public function __construct(array $prices = [], int $priorityMaxDay = 0, int $priorityMinDay = 0, int $standardMaxDay = 0, int $standardMinDay = 0, int $zone = 0, string $errorMessage = '', int $errorCode = 0)
     {
-        $this->standardMinDay = $response['DPMin'] ?? 0;
-        $this->standardMaxDay = $response['DPMin'] ?? 0;
-        $this->priorityMinDay = $response['DPMinPriority'] ?? 0;
-        $this->priorityMaxDay = $response['DPMaxPriority'] ?? 0;
-        $this->zone = $response['Zone'] ?? '';
-        $this->errorCode = $response['ErrorCode'] ?? '';
-        $this->prices = $response['Services'] ?? [];
+        $this->prices = $prices;
+        $this->priorityMaxDay = $priorityMaxDay;
+        $this->priorityMinDay = $priorityMinDay;
+        $this->standardMaxDay = $standardMaxDay;
+        $this->standardMinDay = $standardMinDay;
+        $this->zone = $zone;
+        $this->errorMessage = $errorMessage;
+        $this->errorCode = $errorCode;
+
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getPriorityMaxDay()
+    public function getPriorityMaxDay(): int
     {
         return $this->priorityMaxDay;
     }
 
     /**
-     * @param mixed $priorityMaxDay
+     * @return int
      */
-    public function setPriorityMaxDay($priorityMaxDay)
-    {
-        $this->priorityMaxDay = $priorityMaxDay;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPriorityMinDay()
+    public function getPriorityMinDay(): int
     {
         return $this->priorityMinDay;
     }
 
-
     /**
-     * @return mixed
+     * @return int
      */
-    public function getStandardMaxDay()
+    public function getStandardMaxDay(): int
     {
         return $this->standardMaxDay;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getStandardMinDay()
+    public function getStandardMinDay(): int
     {
         return $this->standardMinDay;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getError()
+    public function getZone(): int
+    {
+        return $this->zone;
+    }
+
+    /**
+     * @return string
+     */
+    public function getErrorMessage(): string
     {
         return $this->errorMessage;
     }
 
-
     /**
-     * @return mixed
+     * @return int
      */
-    public function getErrorCode()
+    public function getErrorCode(): int
     {
         return $this->errorCode;
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getPrices()
+    public function getPrices(): array
     {
         return $this->prices;
     }
-
-
-    /**
-     * @return mixed
-     */
-    public function getZone()
-    {
-        return $this->zone;
-    }
-
 
     /**
      * Returns commons sum of standard tariff

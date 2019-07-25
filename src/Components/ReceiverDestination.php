@@ -5,10 +5,19 @@ namespace PickPointSdk\Components;
 
 class ReceiverDestination
 {
+    /**
+     * @var string
+     */
     protected $city;
 
+    /***
+     * @var string
+     */
     protected $region;
 
+    /**
+     * @var string
+     */
     protected $postamatNumber;
 
     /**
@@ -17,24 +26,25 @@ class ReceiverDestination
      * @param $region
      * @param $postamatNumber
      */
-    public function __construct($city, $region, $postamatNumber = '')
+    public function __construct(string $city, string $region, string $postamatNumber = '')
     {
         $this->city = $city;
         $this->region = $region;
         $this->postamatNumber = $postamatNumber;
     }
+
     /**
-     * @return mixed
+     * @return string
      */
-    public function getCity()
+    public function getCity(): string
     {
         return $this->city;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getRegion()
+    public function getRegion(): string
     {
         return $this->region;
     }

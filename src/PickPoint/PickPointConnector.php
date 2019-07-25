@@ -173,7 +173,18 @@ class PickPointConnector implements DeliveryConnector
     public function calculateObjectedPrices(ReceiverDestination $receiverDestination, SenderDestination $senderDestination = null, PackageSize $packageSize = null): TariffPrice
     {
         $response = $this->calculatePrices($receiverDestination, $senderDestination, $packageSize);
-        $tariffPrice = new TariffPrice($response);
+
+        $tariffPrice = new TariffPrice(
+            $response['Services'] ?? [],
+            $response['DPMaxPriority'] ?? 0,
+            $response['DPMinPriority'] ?? 0,
+            $response['DPMax'] ?? 0,
+            $response['DPMin'] ?? 0,
+            $response['Zone'] ?? 0,
+            $response['ErrorMessage'] ?? '',
+            $response['ErrorCode'] ?? 0
+        );
+
         return $tariffPrice;
     }
 
@@ -190,7 +201,6 @@ class PickPointConnector implements DeliveryConnector
     {
 
         $url = $this->pickPointConf->getHost() . '/CreateShipment';
-        $packageSize = $invoice->getPackageSize();
         InvoiceValidator::validateInvoice($invoice);
 
         $arrayRequest = [
@@ -205,29 +215,29 @@ class PickPointConnector implements DeliveryConnector
                         "RecipientName" => $invoice->getRecipientName(), // required
                         "PostamatNumber" => $invoice->getPostamatNumber(), // required
                         "MobilePhone" => $invoice->getMobilePhone(), // required
-                        "Email" => $invoice->getEmail() ?? '',
-                        "ConsultantNumber" => $invoice->getConsultantNumber() ?? '',
+                        "Email" => $invoice->getEmail(),
+                        "ConsultantNumber" => $invoice->getConsultantNumber(),
                         "PostageType" => $invoice->getPostageType(), // required
                         "GettingType" => $invoice->getGettingType(), // required
                         "PayType" => Invoice::PAY_TYPE,
                         "Sum" => $invoice->getSum(), // required
-                        "PrepaymentSum" => $invoice->getPrepaymentSum() ?? 0,
-                        "DeliveryVat" => $invoice->getDeliveryVat() ?? 0,
-                        "DeliveryFee" => $invoice->getDeliveryFee() ?? 0,
+                        "PrepaymentSum" => $invoice->getPrepaymentSum(),
+                        "DeliveryVat" => $invoice->getDeliveryVat(),
+                        "DeliveryFee" => $invoice->getDeliveryFee(),
                         "DeliveryMode" => $invoice->getDeliveryMode(), // required
                         "SenderCity" => [
                             "CityName" => $this->senderDestination->getCity(),
                             "RegionName" => $this->senderDestination->getRegion()
                         ],
-                        "ClientReturnAddress" => $invoice->getClientReturnAddress() ?? [],
-                        "UnclaimedReturnAddress" => $invoice->getUnclaimedReturnAddress() ?? [],
+                        "ClientReturnAddress" => $invoice->getClientReturnAddress(),
+                        "UnclaimedReturnAddress" => $invoice->getUnclaimedReturnAddress(),
                         "Places" => [
                             [
-                                "Width" => isset($packageSize) ? $packageSize->getWidth() : 0,
-                                "Height" => isset($packageSize) ? $packageSize->getLength() : 0,
-                                "Depth" => isset($packageSize) ? $packageSize->getDepth() : 0,
-                                "Weight" => isset($packageSize) ? $packageSize->getWeight() : 1,
-                                "GSBarCode" => $invoice->getGcBarCode() ?? '',
+                                "Width" => $invoice->getPackageSize()->getWidth(),
+                                "Height" => $invoice->getPackageSize()->getLength(),
+                                "Depth" => $invoice->getPackageSize()->getDepth(),
+                                "Weight" => $invoice->getPackageSize()->getWeight(),
+                                "GSBarCode" => $invoice->getGcBarCode(),
                                 "CellStorageType" => 0,
                                 "SumEncloses" => [
                                     $invoice->getProducts() // required

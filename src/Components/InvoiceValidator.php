@@ -30,8 +30,6 @@ class InvoiceValidator
 
         self::validateGettingType($invoice);
 
-        self::validateProducts($invoice);
-
     }
 
     /**
@@ -126,14 +124,6 @@ class InvoiceValidator
     {
         if (!array_key_exists($invoice->getGettingType(), $invoice->getGettingTypes())) {
             throw new ValidateException('GettingType is not correct');
-        }
-    }
-
-    private static function validateProducts(Invoice $invoice)
-    {
-        $products = $invoice->getProducts();
-        if(count($products) == 0) {
-            throw new ValidateException('Products (SubEncloses field) is empty');
         }
     }
 

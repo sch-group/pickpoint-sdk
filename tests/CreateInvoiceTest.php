@@ -30,12 +30,7 @@ class CreateInvoiceTest extends InitTest
         $packageSize = new PackageSize(20, 20, 20);
         $invoice->setPackageSize($packageSize);
 
-        $product = new Product();
-        $product->setDescription('Test product');
-        $product->setPrice(200);
-        $product->setQuantity(1);
-        $product->setName('Tovar 1');
-        $product->setProductCode('1231');
+        $product = new Product('number 234', 'Test', 2, 100);
 
         $invoice->setProducts([$product]);
 
@@ -47,10 +42,10 @@ class CreateInvoiceTest extends InitTest
 
     public function testCreatePaidWithClientReturnAddressInvoice()
     {
-        $senderCode = 'order:' .(new \DateTime('now'))->getTimestamp();
+        $senderCode = 'order:' .(new \DateTime('now'))->getTimestamp() . 'TEST';
         $invoice = new Invoice();
         $invoice->setSenderCode($senderCode);
-        $invoice->setDescription('Custom zakaz');
+        $invoice->setDescription('Test zakaz');
         $invoice->setRecipientName('Айнур');
         $invoice->setMobilePhone('+79274269594');
 
@@ -65,12 +60,7 @@ class CreateInvoiceTest extends InitTest
         $packageSize = new PackageSize(20, 20, 20);
         $invoice->setPackageSize($packageSize);
 
-        $product = new Product();
-        $product->setDescription('Test product');
-        $product->setPrice(200);
-        $product->setQuantity(1);
-        $product->setName('Tovar 1');
-        $product->setProductCode('1231');
+        $product = new Product('number 234', 'Test', 2, 100.00);
 
         $invoice->setProducts([$product]);
 
@@ -108,12 +98,7 @@ class CreateInvoiceTest extends InitTest
         $packageSize = new PackageSize(20, 20, 20);
         $invoice->setPackageSize($packageSize);
 
-        $product = new Product();
-        $product->setDescription('Test product');
-        $product->setPrice(200);
-        $product->setQuantity(1);
-        $product->setName('Tovar 1');
-        $product->setProductCode('1231');
+        $product = new Product('number 234', 'Test', 2, 100);
 
         $invoice->setProducts([$product]);
         $this->expectException(\PickPointSdk\Exceptions\ValidateException::class);
@@ -144,12 +129,7 @@ class CreateInvoiceTest extends InitTest
         $packageSize = new PackageSize(20, 20, 20);
         $invoice->setPackageSize($packageSize);
 
-        $product = new Product();
-        $product->setDescription('Test product');
-        $product->setPrice(200);
-        $product->setQuantity(1);
-        $product->setName('Tovar 1');
-        $product->setProductCode('1231');
+        $product = new Product('number 234', 'Test', 2, 100);
 
         $invoice->setProducts([$product]);
         $this->expectException(\PickPointSdk\Exceptions\ValidateException::class);
@@ -175,12 +155,8 @@ class CreateInvoiceTest extends InitTest
         $invoice->setPrepaymentSum(500);
         $invoice->setDeliveryMode('standard');
 
-        $product = new Product();
-        $product->setDescription('Test product');
-        $product->setPrice(200);
-        $product->setQuantity(1);
-        $product->setName('Tovar 1');
-        $product->setProductCode('1231');
+        $product = new Product('number 234', 'Test', 2, 100);
+
 
         $invoice->setProducts([$product]);
         $this->expectException(\PickPointSdk\Exceptions\ValidateException::class);
@@ -205,15 +181,30 @@ class CreateInvoiceTest extends InitTest
         $invoice->setPrepaymentSum(500);
         $invoice->setDeliveryMode('standard');
 
-        $product = new Product();
-        $product->setDescription('Test product');
-        $product->setPrice(200);
-        $product->setQuantity(1);
-        $product->setName('Tovar 1');
-        $product->setProductCode('1231');
-
-        $invoice->setProducts([$product]);
         $this->expectException(\PickPointSdk\Exceptions\ValidateException::class);
         $response = $this->client->createShipment($invoice);
     }
+
+    public function testInvoiceWithoutProducts()
+    {
+        $senderCode = 'order:' .(new \DateTime('now'))->getTimestamp() . 'TEST';
+        $invoice = new Invoice();
+        $invoice->setSenderCode($senderCode);
+        $invoice->setDescription('Test zakaz');
+        $invoice->setRecipientName('Айнур');
+        $invoice->setMobilePhone('+79274269592');
+
+        $invoice->setPostamatNumber('5602-009');
+        $invoice->setEmail('ainur_ahmetgalie@mail.ru');
+        $invoice->setPostageType('paid');
+        $invoice->setGettingType('sc');
+        $invoice->setSum(0); // IMPORTANT
+        $invoice->setPrepaymentSum(500);
+        $invoice->setDeliveryMode('standard');
+
+        $response = $this->client->createShipment($invoice);
+
+        $this->assertEquals($response['CreatedSendings'][0]['SenderCode'], $senderCode);
+    }
+
 }

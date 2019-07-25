@@ -6,12 +6,24 @@ namespace PickPointSdk\Components;
 
 class PackageSize
 {
+    /**
+     * @var int
+     */
     private $width;
 
+    /**
+     * @var int
+     */
     private $depth;
 
+    /**
+     * @var int
+     */
     private $length;
 
+    /**
+     * @var int
+     */
     private $weight;
 
     /**
@@ -21,7 +33,7 @@ class PackageSize
      * @param $length
      * @param $weight
      */
-    public function __construct($width, $length, $depth, $weight = 1)
+    public function __construct(int $width, int $length, int $depth, int $weight = 1)
     {
         $this->width = $width;
         $this->depth = $depth;
@@ -30,7 +42,7 @@ class PackageSize
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getWidth()
     {
@@ -38,7 +50,7 @@ class PackageSize
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getDepth()
     {
@@ -46,7 +58,7 @@ class PackageSize
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getLength()
     {
@@ -54,7 +66,7 @@ class PackageSize
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getWeight()
     {

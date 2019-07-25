@@ -65,13 +65,9 @@ $invoice->setSum(500.00);
 $invoice->setDeliveryMode('standard'); // stanadard or priority
 $packageSize = new PackageSize(20, 20, 20);
 $invoice->setPackageSize($packageSize);
-$product = new Product();
-$product->setDescription('Test product');
-$product->setPrice(200);
-$product->setQuantity(1);
-$product->setName('Tovar 1');
-$product->setProductCode('1231');
-$invoice->setProducts([$product]);
+
+$product = new Product('number 234', 'Test', 2, 100);
+
 $address = new Address();
 $address->setCityName('Казань');
 $address->setPhoneNumber('+79274269590');

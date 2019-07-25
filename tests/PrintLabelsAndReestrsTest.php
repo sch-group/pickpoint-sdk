@@ -37,12 +37,16 @@ class PrintLabelsAndReestrsTest extends InitTest
         $this->assertTrue(is_string($pdfByteCode));
         $this->assertNotEmpty($pdfByteCode);
 
+        $remove = $this->client->removeInvoiceFromReceipt($invoiceNumber);
+        $this->assertEquals(0, $remove['ErrorCode']);
+
         $invoice = $this->createInvoice();
         $invoiceNumber = $invoice->getInvoiceNumber();
         $pdfByteCode = $this->client->makeReceiptAndPrint(array($invoiceNumber));
 
         $this->assertTrue(is_string($pdfByteCode));
         $this->assertNotEmpty($pdfByteCode);
+
 
     }
 
@@ -65,12 +69,7 @@ class PrintLabelsAndReestrsTest extends InitTest
         $packageSize = new PackageSize(20, 20, 20);
         $invoice->setPackageSize($packageSize);
 
-        $product = new Product();
-        $product->setDescription('Test product');
-        $product->setPrice(200);
-        $product->setQuantity(1);
-        $product->setName('Tovar 1');
-        $product->setProductCode('1231');
+        $product = new Product('number 234', 'Test', 2, 100);
 
         $invoice->setProducts([$product]);
 
