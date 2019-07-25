@@ -66,12 +66,14 @@ interface DeliveryConnector
     public function printLabel(array $invoiceNumbers);
 
     /**
+     * Create Reestr
      * @param array $invoiceNumbers
      * @return mixed
      */
     public function makeReceipt(array $invoiceNumbers);
 
     /**
+     *
      * @param array $invoiceNumbers
      * @return mixed
      */
@@ -82,5 +84,11 @@ interface DeliveryConnector
      * @return mixed
      */
     public function printReceipt(string $identifier);
+
+    /**
+     * @param string $invoiceNumber
+     * @return mixed
+     */
+    public function removeInvoiceFromReceipt(string $invoiceNumber);
 
 }

@@ -134,41 +134,14 @@ class Invoice
     private $gcBarCode;
 
     /**
-     * @var string
+     * @var int
      */
     private $cellStorageType;
 
     /**
-     * @param string $name
-     * @return int
-     */
-    public function getPostageByName($name = 'paid')
-    {
-        return $name == 'paid' ? self::POSTAGE_TYPE_STANDARD : self::POSTAGE_TYPE_STANDARD_NP;
-    }
-
-    /**
-     * @param string $name
-     * @return int
-     */
-    public function getGettingTypeByName($name = 'courier')
-    {
-        return $name == 'courier' ? self::GETTING_TYPE_COURIER : self::GETTING_TYPE_SC;
-    }
-
-    /**
-     * @param string $name
-     * @return int
-     */
-    public function getDeliveryModeByName($name = 'standard')
-    {
-        return $name == 'standard' ? self::DELIVERY_MODE_STANDARD : self::DELIVERY_MODE_PRIORITY;
-    }
-
-    /**
      * @return array
      */
-    public function getPostageTypes()
+    public function getPostageTypes() : array
     {
         return [
             self::POSTAGE_TYPE_STANDARD => 'Стандарт. Оплаченный заказ.',
@@ -179,7 +152,7 @@ class Invoice
     /**
      * @return array
      */
-    public function getGettingTypes()
+    public function getGettingTypes() : array
     {
         return [
             self::GETTING_TYPE_COURIER => 'Курьер',
@@ -188,175 +161,178 @@ class Invoice
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getInvoiceNumber()
+    public function getInvoiceNumber() : string
     {
         return $this->invoiceNumber;
     }
 
     /**
-     * @param mixed $invoiceNumber
+     * @param string $invoiceNumber
      */
-    public function setInvoiceNumber($invoiceNumber)
+    public function setInvoiceNumber(string $invoiceNumber)
     {
         $this->invoiceNumber = $invoiceNumber;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getBarCode()
+    public function getBarCode() : string
     {
         return $this->barCode;
     }
 
     /**
-     * @param mixed $barCode
+     * @param string $barCode
      */
-    public function setBarCode($barCode)
+    public function setBarCode(string $barCode)
     {
         $this->barCode = $barCode;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getSenderCode()
+    public function getSenderCode() : string
     {
         return $this->senderCode;
     }
 
     /**
-     * @param mixed $senderCode
+     * @param string $senderCode
      */
-    public function setSenderCode($senderCode)
+    public function setSenderCode(string $senderCode)
     {
         $this->senderCode = $senderCode;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getDescription()
+    public function getDescription() : string
     {
-        return $this->description;
+        return $this->description ?? '';
     }
 
     /**
-     * @param mixed $description
+     * @param string $description
      */
-    public function setDescription($description)
+    public function setDescription(string $description)
     {
         $this->description = $description;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getRecipientName()
+    public function getRecipientName() : string
     {
         return $this->recipientName;
     }
 
     /**
-     * @param mixed $recipientName
+     * @param string $recipientName
      */
-    public function setRecipientName($recipientName)
+    public function setRecipientName(string $recipientName)
     {
         $this->recipientName = $recipientName;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getPostamatNumber()
+    public function getPostamatNumber() : string
     {
         return $this->postamatNumber;
     }
 
     /**
-     * @param mixed $postamatNumber
+     * @param string $postamatNumber
      */
-    public function setPostamatNumber($postamatNumber)
+    public function setPostamatNumber(string $postamatNumber)
     {
         $this->postamatNumber = $postamatNumber;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getMobilePhone()
+    public function getMobilePhone() : string
     {
         return $this->mobilePhone;
     }
 
     /**
-     * @param mixed $mobilePhone
+     * @param string$mobilePhone
      */
-    public function setMobilePhone($mobilePhone)
+    public function setMobilePhone(string $mobilePhone)
     {
         $this->mobilePhone = $mobilePhone;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getEmail()
+    public function getEmail() : string
     {
         return $this->email;
     }
 
     /**
-     * @param mixed $email
+     * @param string $email
      */
-    public function setEmail($email)
+    public function setEmail(string $email)
     {
         $this->email = $email;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getPostageType()
+    public function getPostageType() : string
     {
         return $this->postageType;
     }
 
     /**
-     * @param mixed $postageType
+     * @param string $postageType
      */
-    public function setPostageType($postageType = 'paid')
+    public function setPostageType(string $postageType = 'paid')
     {
-        $this->postageType = $this->getPostageByName($postageType);
+        $this->postageType = $postageType == 'paid' ? self::POSTAGE_TYPE_STANDARD : self::POSTAGE_TYPE_STANDARD_NP;;
+        if ($this->postageType == self::POSTAGE_TYPE_STANDARD) {
+            $this->setSum(0);
+        }
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getGettingType()
+    public function getGettingType() : string
     {
         return $this->gettingType;
     }
 
     /**
-     * @param mixed $gettingType
+     * @param string $gettingType
      */
-    public function setGettingType($gettingType = 'courier')
+    public function setGettingType(string $gettingType = 'courier')
     {
-        $this->gettingType = $this->getGettingTypeByName($gettingType);
+        $this->gettingType = $gettingType == 'courier' ? self::GETTING_TYPE_COURIER : self::GETTING_TYPE_SC;
     }
 
     /**
-     * @return mixed
+     * @return float
      */
-    public function getSum()
+    public function getSum() : float
     {
         return $this->sum;
     }
 
     /**
-     * @param mixed $sum
+     * @param float $sum
      */
     public function setSum($sum)
     {
@@ -364,49 +340,49 @@ class Invoice
     }
 
     /**
-     * @return mixed
+     * @return float
      */
-    public function getPrepaymentSum()
+    public function getPrepaymentSum() : float
     {
         return $this->prepaymentSum;
     }
 
     /**
-     * @param mixed $prepaymentSum
+     * @param float $prepaymentSum
      */
-    public function setPrepaymentSum($prepaymentSum)
+    public function setPrepaymentSum(float $prepaymentSum)
     {
         $this->prepaymentSum = $prepaymentSum;
     }
 
     /**
-     * @return mixed
+     * @return float
      */
-    public function getDeliveryVat()
+    public function getDeliveryVat() : float
     {
-        return $this->deliveryVat;
+        return $this->deliveryVat ?? 0;
     }
 
     /**
-     * @param mixed $deliveryVat
+     * @param float $deliveryVat
      */
-    public function setDeliveryVat($deliveryVat)
+    public function setDeliveryVat(float $deliveryVat)
     {
         $this->deliveryVat = $deliveryVat;
     }
 
     /**
-     * @return mixed
+     * @return float
      */
-    public function getDeliveryFee()
+    public function getDeliveryFee() : float
     {
-        return $this->deliveryFee;
+        return $this->deliveryFee ?? 0;
     }
 
     /**
-     * @param mixed $deliveryFee
+     * @param float $deliveryFee
      */
-    public function setDeliveryFee($deliveryFee)
+    public function setDeliveryFee(float $deliveryFee)
     {
         $this->deliveryFee = $deliveryFee;
     }
@@ -414,7 +390,7 @@ class Invoice
     /**
      * @return SenderDestination
      */
-    public function getSenderDestination()
+    public function getSenderDestination() : SenderDestination
     {
         return $this->senderDestination;
     }
@@ -430,15 +406,15 @@ class Invoice
     /**
      * @return array
      */
-    public function getClientReturnAddress()
+    public function getClientReturnAddress() : array
     {
-        return $this->clientReturnAddress != null ? $this->clientReturnAddress->getArray() : [];
+        return $this->clientReturnAddress != null ? $this->clientReturnAddress->transformToArray() : [];
     }
 
     /**
      * @param Address $clientReturnAddress
      */
-    public function setClientReturnAddress($clientReturnAddress)
+    public function setClientReturnAddress(Address $clientReturnAddress)
     {
         $this->clientReturnAddress = $clientReturnAddress;
     }
@@ -446,16 +422,15 @@ class Invoice
     /**
      * @return array
      */
-    public function getUnclaimedReturnAddress()
+    public function getUnclaimedReturnAddress(): array
     {
-
-        return $this->unclaimedReturnAddress != null ? $this->unclaimedReturnAddress->getArray() : [];
+        return $this->unclaimedReturnAddress != null ? $this->unclaimedReturnAddress->transformToArray() : [];
     }
 
     /**
      * @param Address $unclaimedReturnAddress
      */
-    public function setUnclaimedReturnAddress($unclaimedReturnAddress)
+    public function setUnclaimedReturnAddress(Address $unclaimedReturnAddress)
     {
         $this->unclaimedReturnAddress = $unclaimedReturnAddress;
     }
@@ -463,7 +438,7 @@ class Invoice
     /**
      * @return PackageSize
      */
-    public function getPackageSize()
+    public function getPackageSize(): PackageSize
     {
         return $this->packageSize;
     }
@@ -479,7 +454,7 @@ class Invoice
     /**
      * @return array
      */
-    public function getProducts()
+    public function getProducts() : array
     {
         $products = [];
         foreach ($this->products as $product) {
@@ -500,43 +475,43 @@ class Invoice
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getDeliveryMode()
+    public function getDeliveryMode() : string
     {
         return $this->deliveryMode;
     }
 
     /**
-     * @param mixed $deliveryMode
+     * @param string $deliveryMode
      */
-    public function setDeliveryMode($deliveryMode = 'standard')
+    public function setDeliveryMode(string $deliveryMode = 'standard')
     {
-        $this->deliveryMode = $this->getDeliveryModeByName($deliveryMode);
+        $this->deliveryMode = $deliveryMode == 'standard' ? self::DELIVERY_MODE_STANDARD : self::DELIVERY_MODE_PRIORITY;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getConsultantNumber()
     {
-        return $this->consultantNumber;
+        return $this->consultantNumber ?? '';
     }
 
     /**
-     * @param mixed $consultantNumber
+     * @param string $consultantNumber
      */
-    public function setConsultantNumber($consultantNumber)
+    public function setConsultantNumber(string $consultantNumber)
     {
         $this->consultantNumber = $consultantNumber;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getGcBarCode()
     {
-        return $this->gcBarCode;
+        return $this->gcBarCode ?? '';
     }
 
     /**
@@ -548,17 +523,17 @@ class Invoice
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getCellStorageType()
+    public function getCellStorageType() : int
     {
-        return $this->cellStorageType;
+        return $this->cellStorageType ?? 0;
     }
 
     /**
-     * @param mixed $cellStorageType
+     * @param int $cellStorageType
      */
-    public function setCellStorageType($cellStorageType)
+    public function setCellStorageType(int $cellStorageType)
     {
         $this->cellStorageType = $cellStorageType;
     }
@@ -569,16 +544,16 @@ class Invoice
      */
     public function getEdtn()
     {
-        if(empty($this->edtn)) {
+        if (empty($this->edtn)) {
             return (new \DateTime('now'))->getTimestamp();
         }
         return $this->edtn;
     }
 
     /**
-     * @param $edtn
+     * @param string $edtn
      */
-    public function setEdtn($edtn)
+    public function setEdtn(string $edtn)
     {
         $this->edtn = $edtn;
     }

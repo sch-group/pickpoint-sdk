@@ -421,6 +421,30 @@ class PickPointConnector implements DeliveryConnector
     }
 
     /**
+     * @param string $invoiceNumber
+     * @return mixed
+     * @throws PickPointMethodCallException
+     */
+    public function removeInvoiceFromReceipt(string $invoiceNumber)
+    {
+        $url = $this->pickPointConf->getHost() . '/removeinvoicefromreestr';
+        $array = [
+            'SessionId' => $this->auth(),
+            'IKN' => $this->pickPointConf->getIKN(),
+            "InvoiceNumber" => $invoiceNumber,
+        ];
+        $request = $this->client->post($url, [
+            'json' => $array,
+        ]);
+
+        $response = json_decode($request->getBody()->getContents(), true);
+
+        $this->checkMethodException($response, $url);
+
+        return $response;
+    }
+
+    /**
      * @param $response
      * @param $urlCall
      * @return mixed
@@ -434,4 +458,6 @@ class PickPointConnector implements DeliveryConnector
             throw new PickPointMethodCallException($urlCall, $errorMessage, $errorCode);
         }
     }
+
+
 }

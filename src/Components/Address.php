@@ -6,161 +6,185 @@ namespace PickPointSdk\Components;
 
 class Address
 {
+    /**
+     * @var string
+     */
     private $cityName;
 
+    /**
+     * @var string
+     */
     private $regionName;
 
+    /**
+     * @var string
+     */
     private $address;
 
+    /**
+     * @var string
+     */
     private $fio;
 
+    /**
+     * @var string
+     */
     private $postCode;
 
+    /**
+     * @var string
+     */
     private $organization;
 
+    /**
+     * @var string
+     */
     private $phoneNumber; // required
 
+    /**
+     * @var string
+     */
     private $comment;
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getCityName()
+    public function getCityName() : string
     {
         return $this->cityName;
     }
 
     /**
-     * @param mixed $cityName
+     * @param string $cityName
      */
-    public function setCityName($cityName)
+    public function setCityName(string $cityName)
     {
-        $this->cityName = $cityName;
+        $this->cityName = $cityName ?? '';
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getRegionName()
+    public function getRegionName() : string
     {
-        return $this->regionName;
+        return $this->regionName ?? '';
     }
 
     /**
-     * @param mixed $regionName
+     * @param string $regionName
      */
-    public function setRegionName($regionName)
+    public function setRegionName(string $regionName)
     {
         $this->regionName = $regionName;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getAddress()
     {
-        return $this->address;
+        return $this->address ?? '';
     }
 
     /**
-     * @param mixed $address
+     * @param string $address
      */
-    public function setAddress($address)
+    public function setAddress(string $address)
     {
         $this->address = $address;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getFio()
+    public function getFio() : string
     {
-        return $this->fio;
+        return $this->fio ?? '';
     }
 
     /**
-     * @param mixed $fio
+     * @param string $fio
      */
-    public function setFio($fio)
+    public function setFio(string $fio)
     {
         $this->fio = $fio;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getPostCode()
+    public function getPostCode() : string
     {
-        return $this->postCode;
+        return $this->postCode ?? '';
     }
 
     /**
-     * @param mixed $postCode
+     * @param string $postCode
      */
-    public function setPostCode($postCode)
+    public function setPostCode(string $postCode)
     {
-        $this->postCode = $postCode;
+        $this->postCode = $postCode ?? '';
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getOrganization()
+    public function getOrganization() : string
     {
-        return $this->organization;
+        return $this->organization ?? '';
     }
 
     /**
-     * @param mixed $organization
+     * @param string $organization
      */
-    public function setOrganization($organization)
+    public function setOrganization(string $organization)
     {
         $this->organization = $organization;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getPhoneNumber()
+    public function getPhoneNumber() : string
     {
-        return $this->phoneNumber;
+        return $this->phoneNumber ?? '';
     }
 
     /**
-     * @param mixed $phoneNumber
+     * @param string $phoneNumber
      */
-    public function setPhoneNumber($phoneNumber)
+    public function setPhoneNumber(string $phoneNumber)
     {
         $this->phoneNumber = $phoneNumber;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getComment()
     {
-        return $this->comment;
+        return $this->comment ?? '';
     }
 
     /**
-     * @param mixed $comment
+     * @param string $comment
      */
-    public function setComment($comment)
+    public function setComment(string $comment)
     {
         $this->comment = $comment;
     }
 
-    public function getArray()
+    public function transformToArray()
     {
         return [
-          'CityName' => $this->getCityName() ?? '',
-          'RegionName' => $this->getRegionName() ?? '',
-          'Address' => $this->getAddress() ?? '',
-          'FIO' => $this->getFio() ?? '',
-          'PostCode' => $this->getPostCode() ?? '',
-          'Organization' => $this->getOrganization() ?? '',
-          'PhoneNumber' => $this->getPhoneNumber() ?? '',
-          'Comment' => $this->getComment() ?? ''
+          'CityName' => $this->getCityName(),
+          'RegionName' => $this->getRegionName(),
+          'Address' => $this->getAddress(),
+          'FIO' => $this->getFio(),
+          'PostCode' => $this->getPostCode(),
+          'Organization' => $this->getOrganization(),
+          'PhoneNumber' => $this->getPhoneNumber(),
+          'Comment' => $this->getComment()
         ];
     }
 }
