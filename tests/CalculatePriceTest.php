@@ -46,6 +46,7 @@ class CalculatePriceTest extends InitTest
         $commonStandardPrice = $tariffPrice->getStandardCommonPrice();
         $this->assertTrue($commonStandardPrice > 0);
         $this->assertFalse($tariffPrice->existsPriorityType());
+        $this->assertTrue($tariffPrice->getPrice() > 0);
 
         echo "common price = " . $commonStandardPrice;
     }

@@ -2,8 +2,8 @@
 
 namespace PickPointSdk\PickPoint;
 
+use DateTime;
 use GuzzleHttp\Client;
-use phpDocumentor\Reflection\Types\Null_;
 use PickPointSdk\Components\Invoice;
 use PickPointSdk\Components\InvoiceValidator;
 use PickPointSdk\Components\PackageSize;
@@ -166,12 +166,13 @@ class PickPointConnector implements DeliveryConnector
 
     /**
      * @param ReceiverDestination $receiverDestination
+     * @param string $tariffType
      * @param SenderDestination|null $senderDestination
      * @param PackageSize|null $packageSize
      * @return TariffPrice
      * @throws PickPointMethodCallException
      */
-    public function calculateObjectedPrices(ReceiverDestination $receiverDestination, SenderDestination $senderDestination = null, PackageSize $packageSize = null): TariffPrice
+    public function calculateObjectedPrices(ReceiverDestination $receiverDestination, string $tariffType = 'Standard', SenderDestination $senderDestination = null, PackageSize $packageSize = null): TariffPrice
     {
         $response = $this->calculatePrices($receiverDestination, $senderDestination, $packageSize);
 
@@ -183,7 +184,8 @@ class PickPointConnector implements DeliveryConnector
             $response['DPMin'] ?? 0,
             $response['Zone'] ?? 0,
             $response['ErrorMessage'] ?? '',
-            $response['ErrorCode'] ?? 0
+            $response['ErrorCode'] ?? 0,
+            $tariffType
         );
 
         return $tariffPrice;
@@ -494,4 +496,36 @@ class PickPointConnector implements DeliveryConnector
     }
 
 
+    /**
+     * Return all invoices
+     * @param $dateFrom
+     * @param $dateTo
+     * @param string $status
+     * @param string $postageType
+     * @return mixed
+     * @throws PickPointMethodCallException
+     */
+    public function getInvoicesByDateRange($dateFrom, $dateTo, $status = null, $postageType = null)
+    {
+        $dateFrom = (new DateTime($dateFrom))->format('d.m.y H:m');
+        $dateTo = (new DateTime($dateTo))->format('d.m.y H:m');
+        $url = $this->pickPointConf->getHost() . '/getInvoicesChangeState';
+
+        $array = [
+            'SessionId' => $this->auth(),
+            'DateFrom' => $dateFrom,
+            'DateTo' => $dateTo,
+            "State" => $status,
+
+        ];
+
+        $request = $this->client->post($url, [
+            'json' => $array,
+        ]);
+
+        $response = json_decode($request->getBody()->getContents(), true);
+        $this->checkMethodException($response, $url);
+
+        return $response;
+    }
 }

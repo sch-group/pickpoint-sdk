@@ -46,7 +46,13 @@ class TariffPrice
     private $prices;
 
     /**
+     * @var string
+     */
+    private $tariffType;
+
+    /**
      * TariffPrice constructor.
+     * @param array $prices
      * @param int $priorityMaxDay
      * @param int $priorityMinDay
      * @param int $standardMaxDay
@@ -54,9 +60,9 @@ class TariffPrice
      * @param int $zone
      * @param string $errorMessage
      * @param int $errorCode
-     * @param array $prices
+     * @param string $tariffType
      */
-    public function __construct(array $prices = [], int $priorityMaxDay = 0, int $priorityMinDay = 0, int $standardMaxDay = 0, int $standardMinDay = 0, int $zone = 0, string $errorMessage = '', int $errorCode = 0)
+    public function __construct(array $prices = [], int $priorityMaxDay = 0, int $priorityMinDay = 0, int $standardMaxDay = 0, int $standardMinDay = 0, int $zone = 0, string $errorMessage = '', int $errorCode = 0, string $tariffType = 'standart')
     {
         $this->prices = $prices;
         $this->priorityMaxDay = $priorityMaxDay;
@@ -66,7 +72,7 @@ class TariffPrice
         $this->zone = $zone;
         $this->errorMessage = $errorMessage;
         $this->errorCode = $errorCode;
-
+        $this->tariffType = $tariffType;
     }
 
     /**
@@ -142,7 +148,13 @@ class TariffPrice
         return $this->getPriceByType('Standard');
     }
 
-    public function getPriorityPrice()
+    public function getPriorityCommponPrice()
+    {
+        return $this->getPriceByType('Priority');
+    }
+
+
+    private function getPriorityPrice()
     {
         return $this->getPriceByType('Priority');
     }
@@ -169,6 +181,30 @@ class TariffPrice
             }
         }
         return false;
+    }
+
+    public function getPrice()
+    {
+        if ($this->tariffType == 'Standard') {
+            return $this->getStandardCommonPrice();
+        }
+        return $this->getStandardCommonPrice();
+    }
+
+    public function getDeliveryPeriodMin()
+    {
+        if($this->tariffType == 'Standard') {
+            return $this->getStandardMinDay();
+        }
+        return $this->getPriorityMinDay();
+    }
+
+    public function getDeliveryPeriodMax()
+    {
+        if($this->tariffType == 'Standard') {
+            return $this->getStandardMaxDay();
+        }
+        return $this->getPriorityMaxDay();
     }
 
 }

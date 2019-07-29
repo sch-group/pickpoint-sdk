@@ -28,7 +28,7 @@ class InitTest extends TestCase
           'host' => $config['redis_host'],
           'port' => $config['redis_port']
         ];
-        $this->client = new PickPointConnector($pickPointConf, $senderDestination, $defaultPackageSize, $redisConf);
+        $this->client = new PickPointConnector($pickPointConf, $senderDestination, $defaultPackageSize, []);
     }
 
 }

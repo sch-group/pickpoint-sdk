@@ -18,7 +18,7 @@ class CreateInvoiceTest extends InitTest
         $invoice->setSenderCode($senderCode);
         $invoice->setPostamatNumber('5602-009');
         $invoice->setDescription('Custom zakaz');
-        $invoice->setRecipientName('Айнур');
+        $invoice->setRecipientName('Test');
         $invoice->setMobilePhone('+79274269594');
 
         $invoice->setEmail('ainur_ahmetgalie@mail.ru');
@@ -46,7 +46,7 @@ class CreateInvoiceTest extends InitTest
         $invoice = new Invoice();
         $invoice->setSenderCode($senderCode);
         $invoice->setDescription('Test zakaz');
-        $invoice->setRecipientName('Айнур');
+        $invoice->setRecipientName('Test');
         $invoice->setMobilePhone('+79274269594');
 
         $invoice->setPostamatNumber('5602-009');
@@ -83,7 +83,7 @@ class CreateInvoiceTest extends InitTest
     {
         $invoice = new Invoice();
         $invoice->setDescription('Custom zakaz');
-        $invoice->setRecipientName('Айнур');
+        $invoice->setRecipientName('Test');
         $invoice->setMobilePhone('+79274269594');
 
         $invoice->setPostamatNumber('5602-009');
@@ -114,7 +114,7 @@ class CreateInvoiceTest extends InitTest
         $senderCode = 'order:' .(new \DateTime('now'))->getTimestamp();
         $invoice = new Invoice();
         $invoice->setSenderCode($senderCode);
-        $invoice->setDescription('Custom zakaz');
+        $invoice->setDescription('Test zakaz');
 //        $invoice->setRecipientName('Айнур');
         $invoice->setMobilePhone('+79274269594');
 
@@ -144,7 +144,7 @@ class CreateInvoiceTest extends InitTest
         $invoice = new Invoice();
         $invoice->setSenderCode($senderCode);
         $invoice->setDescription('Custom zakaz');
-        $invoice->setRecipientName('Айнур');
+        $invoice->setRecipientName('Test');
         $invoice->setMobilePhone('+79274269594');
 
         $invoice->setPostamatNumber('5602-009');
@@ -170,14 +170,14 @@ class CreateInvoiceTest extends InitTest
         $invoice = new Invoice();
         $invoice->setSenderCode($senderCode);
         $invoice->setDescription('Custom zakaz');
-        $invoice->setRecipientName('Айнур');
+        $invoice->setRecipientName('Test');
         $invoice->setMobilePhone('+79274269594');
 
         $invoice->setPostamatNumber('5602-009');
         $invoice->setPostageType('paid');
         $invoice->setGettingType('courier');
 
-        $invoice->setSum(21.32); // SUM MUST BE = 0 for paid
+        $invoice->setSum(10); // SUM MUST BE = 0 for paid
         $invoice->setPrepaymentSum(500);
         $invoice->setDeliveryMode('standard');
 
@@ -191,7 +191,7 @@ class CreateInvoiceTest extends InitTest
         $invoice = new Invoice();
         $invoice->setSenderCode($senderCode);
         $invoice->setDescription('Test zakaz');
-        $invoice->setRecipientName('Айнур');
+        $invoice->setRecipientName('Test');
         $invoice->setMobilePhone('+79274269592');
 
         $invoice->setPostamatNumber('5602-009');
@@ -199,7 +199,7 @@ class CreateInvoiceTest extends InitTest
         $invoice->setPostageType('paid');
         $invoice->setGettingType('sc');
         $invoice->setSum(0); // IMPORTANT
-        $invoice->setPrepaymentSum(500);
+        $invoice->setPrepaymentSum(10);
         $invoice->setDeliveryMode('standard');
 
         $response = $this->client->createShipment($invoice);
