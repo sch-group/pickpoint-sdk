@@ -2,6 +2,7 @@
 
 namespace PickPointSdk\Contracts;
 
+use PickPointSdk\Components\CourierCall;
 use PickPointSdk\Components\State;
 use PickPointSdk\Components\Invoice;
 use PickPointSdk\Components\PackageSize;
@@ -40,9 +41,10 @@ interface DeliveryConnector
 
     /**
      * @param string $invoiceNumber
+     * @param string $senderCode
      * @return mixed
      */
-    public function cancelInvoice(string $invoiceNumber);
+    public function cancelInvoice(string $invoiceNumber = '', string $senderCode = '');
 
     /**
      * @param ReceiverDestination $receiverDestination
@@ -110,5 +112,24 @@ interface DeliveryConnector
      * @return mixed
      */
     public function getInvoicesByDateRange($dateFrom, $dateTo, $status = null, $postageType = null);
+
+    /**
+     * @param CourierCall $courierCall
+     * @return mixed
+     */
+    public function callCourier(CourierCall $courierCall);
+
+    /**
+     * @param string $callOrderNumber
+     * @return mixed
+     */
+    public function cancelCourierCall(string $callOrderNumber);
+
+    /**
+     * @param string $invoiceNumber
+     * @param string $shopOrderNumber
+     * @return mixed
+     */
+    public function shipmentInfo(string $invoiceNumber, string $shopOrderNumber);
 
 }

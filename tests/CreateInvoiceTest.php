@@ -17,14 +17,14 @@ class CreateInvoiceTest extends InitTest
         $invoice = new Invoice();
         $invoice->setSenderCode($senderCode);
         $invoice->setPostamatNumber('5602-009');
-        $invoice->setDescription('Custom zakaz');
+        $invoice->setDescription('TEST zakaz');
         $invoice->setRecipientName('Test');
         $invoice->setMobilePhone('+79274269594');
 
         $invoice->setEmail('ainur_ahmetgalie@mail.ru');
-        $invoice->setPostageType('unpiad');
+        $invoice->setPostageType('unpaid');
         $invoice->setGettingType('sc');
-        $invoice->setSum(500.00);
+        $invoice->setSum(10.00);
         $invoice->setDeliveryMode('standard');
 
         $packageSize = new PackageSize(20, 20, 20);
@@ -54,7 +54,7 @@ class CreateInvoiceTest extends InitTest
         $invoice->setPostageType('paid');
         $invoice->setGettingType('sc');
         $invoice->setSum(0); // IMPORTANT
-        $invoice->setPrepaymentSum(500);
+        $invoice->setPrepaymentSum(10);
         $invoice->setDeliveryMode('standard');
 
         $packageSize = new PackageSize(20, 20, 20);
@@ -82,7 +82,7 @@ class CreateInvoiceTest extends InitTest
     public function testValidateWithoutSenderCodeExceptions()
     {
         $invoice = new Invoice();
-        $invoice->setDescription('Custom zakaz');
+        $invoice->setDescription('TEST Zkaz');
         $invoice->setRecipientName('Test');
         $invoice->setMobilePhone('+79274269594');
 
@@ -92,7 +92,7 @@ class CreateInvoiceTest extends InitTest
         $invoice->setGettingType('sc');
 
         $invoice->setSum(0); // IMPORTANT
-        $invoice->setPrepaymentSum(500);
+        $invoice->setPrepaymentSum(10);
         $invoice->setDeliveryMode('standard');
 
         $packageSize = new PackageSize(20, 20, 20);
@@ -114,7 +114,7 @@ class CreateInvoiceTest extends InitTest
         $senderCode = 'order:' .(new \DateTime('now'))->getTimestamp();
         $invoice = new Invoice();
         $invoice->setSenderCode($senderCode);
-        $invoice->setDescription('Test zakaz');
+        $invoice->setDescription('TEST TEST');
 //        $invoice->setRecipientName('Айнур');
         $invoice->setMobilePhone('+79274269594');
 
@@ -123,7 +123,7 @@ class CreateInvoiceTest extends InitTest
         $invoice->setGettingType('sc');
 
         $invoice->setSum(0); // IMPORTANT
-        $invoice->setPrepaymentSum(500);
+        $invoice->setPrepaymentSum(10);
         $invoice->setDeliveryMode('standard');
 
         $packageSize = new PackageSize(20, 20, 20);
@@ -143,7 +143,7 @@ class CreateInvoiceTest extends InitTest
         $senderCode = 'order:' .(new \DateTime('now'))->getTimestamp();
         $invoice = new Invoice();
         $invoice->setSenderCode($senderCode);
-        $invoice->setDescription('Custom zakaz');
+        $invoice->setDescription('TEST TEST');
         $invoice->setRecipientName('Test');
         $invoice->setMobilePhone('+79274269594');
 
@@ -152,7 +152,7 @@ class CreateInvoiceTest extends InitTest
         $invoice->setGettingType('courier');
 
         $invoice->setSum(0); // SUM MUST BE > 0 for unpaid
-        $invoice->setPrepaymentSum(500);
+        $invoice->setPrepaymentSum(10);
         $invoice->setDeliveryMode('standard');
 
         $product = new Product('number 234', 'Test', 2, 100);
@@ -169,7 +169,7 @@ class CreateInvoiceTest extends InitTest
         $senderCode = 'order:' .(new \DateTime('now'))->getTimestamp();
         $invoice = new Invoice();
         $invoice->setSenderCode($senderCode);
-        $invoice->setDescription('Custom zakaz');
+        $invoice->setDescription('TEST TEST');
         $invoice->setRecipientName('Test');
         $invoice->setMobilePhone('+79274269594');
 
@@ -178,7 +178,7 @@ class CreateInvoiceTest extends InitTest
         $invoice->setGettingType('courier');
 
         $invoice->setSum(10); // SUM MUST BE = 0 for paid
-        $invoice->setPrepaymentSum(500);
+        $invoice->setPrepaymentSum(10);
         $invoice->setDeliveryMode('standard');
 
         $this->expectException(\PickPointSdk\Exceptions\ValidateException::class);

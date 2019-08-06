@@ -29,11 +29,10 @@ $redisCacheConf = [
  'port' => 6379
 ];
 
-$client = new PickPointConnector(new PickPointConf($config), $senderDestination, $defaultPackageSize, $redisCacheConf);
+$client = new PickPointConnector($pickPointConf, $senderDestination, $defaultPackageSize, $redisCacheConf);
 
  
 ```
-
 
 Получение массива постаматов
 
@@ -90,17 +89,16 @@ $invoiceNumber = $invoice->getInvoiceNumber();
 $reestr = $client->makeReceipt(array($invoiceNumber));
 $pdfByteCode = $client->rintReceipt($reestr[0]);
 
-
 ```
 Одновременное создание реестра и печать
 ```
 $invoice = $client->createShipmentWithInvoice($invoice);
 $invoiceNumber = $invoice->getInvoiceNumber();
-$pdfByteCode = $this->client->makeReceiptAndPrint(array($invoiceNumber));
+$pdfByteCode = $client->makeReceiptAndPrint(array($invoiceNumber));
 ```
 Удалить инвойс из реестра
 ```
- $remove = $this->client->removeInvoiceFromReceipt($invoiceNumber);
+ $remove = $client->removeInvoiceFromReceipt($invoiceNumber);
 ```
 Проверка статуса отправлений
 
@@ -115,3 +113,48 @@ $status->getStateText();
 ```
 $states = $client->getStates();
 ```
+
+Отмена отправления 
+
+```
+$senderCode = $invoice->getSenderCode(); // order id
+$cancelResponse = $client->cancelInvoice($invoiceNumber);
+или 
+$cancelResponse = $client->cancelInvoice('', $senderCode); // отмена с собственным id заказа
+
+```
+Информация об отправлении 
+
+```
+$response = $client->shipmentInfo($invoiceNumber);
+$response = $client->shipmentInfo('', $senderCode);
+```
+Вызов курьера
+
+```
+$senderDestination = new SenderDestination('Москва', 'Московская обл.', '', 992); 
+
+$courierCall = new CourierCall(
+    $senderDestination->getCity(),
+    $senderDestination->getCityId(),
+    $senderDestination->getAddress(),
+   'Тестов Тест',
+    '+79274269594',
+    new \DateTime('tomorrow + 1 day'),
+    12 * 60, // from 12:00,
+    17 * 60, // to 17:00
+    1, // 1 заказ,
+    1, // 10 кг
+    'Это тестовый вызов, пожалуйста не приезжайте'
+ );
+
+$callCourier = $client->callCourier($courierCall);
+$courierOrderNumber = $callCourier->getCallOrderNumber();
+```
+Отмена вызова курьера
+```
+
+$cancelResponse = $client->cancelCourierCall($courierOrderNumber);
+
+```
+

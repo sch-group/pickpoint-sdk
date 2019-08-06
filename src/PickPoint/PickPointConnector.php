@@ -4,6 +4,7 @@ namespace PickPointSdk\PickPoint;
 
 use DateTime;
 use GuzzleHttp\Client;
+use PickPointSdk\Components\CourierCall;
 use PickPointSdk\Components\Invoice;
 use PickPointSdk\Components\InvoiceValidator;
 use PickPointSdk\Components\PackageSize;
@@ -68,6 +69,14 @@ class PickPointConnector implements DeliveryConnector
     }
 
     /**
+     * @return SenderDestination
+     */
+    public function getSenderDestination(): SenderDestination
+    {
+        return $this->senderDestination;
+    }
+
+    /**
      * @return string
      * @throws PickPointMethodCallException
      */
@@ -88,7 +97,7 @@ class PickPointConnector implements DeliveryConnector
             $response = json_decode($request->getBody()->getContents(), true);
 
             if (!empty($this->redisCache)) {
-                $this->redisCache->setex(self::CACHE_SESSION_KEY,  self::CACHE_SESSION_LIFE_TIME, $response['SessionId']);
+                $this->redisCache->setex(self::CACHE_SESSION_KEY, self::CACHE_SESSION_LIFE_TIME, $response['SessionId']);
             }
 
         } catch (\Exception $exception) {
@@ -200,9 +209,8 @@ class PickPointConnector implements DeliveryConnector
      * @throws PickPointMethodCallException
      * @throws ValidateException
      */
-    public function createShipment(Invoice $invoice) : array
+    public function createShipment(Invoice $invoice): array
     {
-
         $url = $this->pickPointConf->getHost() . '/CreateShipment';
         InvoiceValidator::validateInvoice($invoice);
 
@@ -258,9 +266,18 @@ class PickPointConnector implements DeliveryConnector
 
         $response = json_decode($request->getBody()->getContents(), true);
 
-        $this->checkMethodException($response, $url);
+        $this->checkCreateShipmentException($response, $url);
 
         return $response;
+    }
+
+    private function checkCreateShipmentException(array $response, string $url)
+    {
+        $this->checkMethodException($response, $url);
+
+        if (!empty($response['RejectedSendings'][0])) {
+            throw new PickPointMethodCallException($url, $response['RejectedSendings'][0]['ErrorMessage'], $response['RejectedSendings'][0]['ErrorCode']);
+        }
     }
 
     /**
@@ -287,7 +304,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function getState(string $invoiceNumber, string $orderNumber = '') : State
+    public function getState(string $invoiceNumber, string $orderNumber = ''): State
     {
 
         $url = $this->pickPointConf->getHost() . '/tracksending';
@@ -305,25 +322,36 @@ class PickPointConnector implements DeliveryConnector
 
         $response = $response[0] ?? [];
 
-        return new State($response['State'] ?? 0, $response['StateMessage']?? '');
+        return new State($response['State'] ?? 0, $response['StateMessage'] ?? '');
     }
 
     /**
      * @param string $invoiceNumber
+     * @param string $senderCode
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function cancelInvoice(string $invoiceNumber)
+    public function cancelInvoice(string $invoiceNumber = '', string $senderCode = '') : array
     {
         $url = $this->pickPointConf->getHost() . '/cancelInvoice';
+
+        $requestArray = [
+            'SessionId' => $this->auth(),
+            "IKN" => $this->pickPointConf->getIKN(),
+        ];
+        if(!empty($invoiceNumber)) {
+            $requestArray['InvoiceNumber'] = $invoiceNumber;
+        }
+
+        if(!empty($senderCode)) {
+            $requestArray["GCInvoiceNumber"] = $senderCode;
+        }
+
         $request = $this->client->post($url, [
-            'json' => [
-                'SessionId' => $this->auth(),
-                "IKN" => $this->pickPointConf->getIKN(),
-                "InvoiceNumber" => $invoiceNumber
-            ],
+            'json' => $requestArray
         ]);
-        $response = $request->getBody()->getContents();
+
+        $response = json_decode($request->getBody()->getContents(), true);
 
         $this->checkMethodException($response, $url);
 
@@ -336,7 +364,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function printLabel(array $invoiceNumbers) : string
+    public function printLabel(array $invoiceNumbers): string
     {
         $invoices = !empty($invoices) ? $invoices : [];
 
@@ -360,7 +388,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function makeReceipt(array $invoiceNumbers) : array
+    public function makeReceipt(array $invoiceNumbers): array
     {
 
         $url = $this->pickPointConf->getHost() . '/makereestrnumber';
@@ -392,7 +420,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function printReceipt(string $identifier) : string
+    public function printReceipt(string $identifier): string
     {
         $url = $this->pickPointConf->getHost() . '/getreestr';
         $array = [
@@ -414,7 +442,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function makeReceiptAndPrint(array $invoiceNumbers) : string
+    public function makeReceiptAndPrint(array $invoiceNumbers): string
     {
         $url = $this->pickPointConf->getHost() . '/makereestr';
         $array = [
@@ -463,7 +491,7 @@ class PickPointConnector implements DeliveryConnector
      * @return array
      * @throws PickPointMethodCallException
      */
-    public function getStates() : array
+    public function getStates(): array
     {
         $url = $this->pickPointConf->getHost() . '/getstates';
 
@@ -480,21 +508,6 @@ class PickPointConnector implements DeliveryConnector
 
         return $states;
     }
-    /**
-     * @param $response
-     * @param $urlCall
-     * @return mixed
-     * @throws PickPointMethodCallException
-     */
-    private function checkMethodException($response, $urlCall)
-    {
-        if (!empty($response['ErrorCode'])) {
-            $errorCode = $response['ErrorCode'];
-            $errorMessage = $response['Error'] ?? "";
-            throw new PickPointMethodCallException($urlCall, $errorMessage, $errorCode);
-        }
-    }
-
 
     /**
      * Return all invoices
@@ -524,8 +537,129 @@ class PickPointConnector implements DeliveryConnector
         ]);
 
         $response = json_decode($request->getBody()->getContents(), true);
+
         $this->checkMethodException($response, $url);
 
         return $response;
     }
+
+    /**
+     * @param CourierCall $courierCall
+     * @return mixed
+     * @throws PickPointMethodCallException
+     */
+    public function callCourier(CourierCall $courierCall) : CourierCall
+    {
+        $url = $this->pickPointConf->getHost() . '/courier';
+        $array = [
+            'SessionId' => $this->auth(),
+            'IKN' => $this->pickPointConf->getIKN(),
+            'City' => $courierCall->getCityName(),
+            "City_id" => $courierCall->getCityId(),
+            "Address" => $courierCall->getAddress(),
+            "FIO" => $courierCall->getFio(),
+            "Phone" => $courierCall->getPhone(),
+            "Date" => $courierCall->getDate(),
+            "TimeStart" => $courierCall->getTimeStart(),
+            "TimeEnd" => $courierCall->getTimeEnd(),
+            "Number" => $courierCall->getNumberOfInvoices(),
+            "Weight" => $courierCall->getWeight(),
+            "Comment" => $courierCall->getComment()
+        ];
+
+        $request = $this->client->post($url, [
+            'json' => $array,
+        ]);
+
+        $response = json_decode($request->getBody()->getContents(), true);
+
+        $this->checkCourierCallException($response, $url, $courierCall);
+
+        return $courierCall;
+    }
+
+    /**
+     * @param string $callOrderNumber
+     * @return mixed
+     * @throws PickPointMethodCallException
+     */
+    public function cancelCourierCall(string $callOrderNumber) : array
+    {
+        $url = $this->pickPointConf->getHost() . '/couriercancel';
+        $array = [
+            'SessionId' => $this->auth(),
+            'OrderNumber' => $callOrderNumber
+        ];
+
+        $request = $this->client->post($url, [
+            'json' => $array,
+        ]);
+
+        $response = json_decode($request->getBody()->getContents(), true);
+
+        $this->checkMethodException($response, $url);
+
+        return $response;
+    }
+
+    /**
+     * @param array $response
+     * @param string $url
+     * @param CourierCall $courierCall
+     * @return CourierCall
+     * @throws PickPointMethodCallException
+     */
+    private function checkCourierCallException(array $response, string $url, CourierCall $courierCall)
+    {
+        $this->checkMethodException($response, $url);
+
+        if (!empty($response['CourierRequestRegistred'])) {
+            $courierCall->setCallOrderNumber($response['OrderNumber']);
+            return $courierCall;
+        }
+        throw new PickPointMethodCallException($url, $response['ErrorMessage']);
+    }
+
+    /**
+     * @param $response
+     * @param $urlCall
+     * @return mixed
+     * @throws PickPointMethodCallException
+     */
+    private function checkMethodException(array $response, string $urlCall)
+    {
+        if (!empty($response['ErrorCode'])) {
+            $errorCode = $response['ErrorCode'];
+            $errorMessage = $response['Error'] ?? "";
+            throw new PickPointMethodCallException($urlCall, $errorMessage, $errorCode);
+        }
+    }
+
+
+    /**
+     * @param string $invoiceNumber
+     * @param string $shopOrderNumber
+     * @return mixed
+     * @throws PickPointMethodCallException
+     */
+    public function shipmentInfo(string $invoiceNumber, string $shopOrderNumber = '') : array
+    {
+        $url = $this->pickPointConf->getHost() . '/sendinginfo';
+        $array = [
+            'SessionId' => $this->auth(),
+            'InvoiceNumber' => $invoiceNumber,
+            "SenderInvoiceNumber" => $shopOrderNumber
+        ];
+
+        $request = $this->client->post($url, [
+            'json' => $array,
+        ]);
+
+        $response = json_decode($request->getBody()->getContents(), true);
+
+        $this->checkMethodException($response, $url);
+
+        return $response;
+    }
+
 }
