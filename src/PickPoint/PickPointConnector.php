@@ -626,7 +626,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    private function checkMethodException(array $response, string $urlCall)
+    private function checkMethodException($response, string $urlCall)
     {
         if (!empty($response['ErrorCode'])) {
             $errorCode = $response['ErrorCode'];
