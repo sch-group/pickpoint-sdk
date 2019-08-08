@@ -366,7 +366,7 @@ class PickPointConnector implements DeliveryConnector
      */
     public function printLabel(array $invoiceNumbers): string
     {
-        $invoices = !empty($invoices) ? $invoices : [];
+        $invoices = !empty($invoiceNumbers) ? $invoiceNumbers : [];
 
         $url = $this->pickPointConf->getHost() . '/makelabel';
         $request = $this->client->post($url, [
