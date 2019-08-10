@@ -40,6 +40,11 @@ class Product
     private $description;
 
     /**
+     * @var string
+     */
+    private $upi;
+
+    /**
      * Product constructor.
      * @param string $productCode
      * @param string $name
@@ -48,8 +53,9 @@ class Product
      * @param string $goodsCode
      * @param float $vat
      * @param string $description
+     * @param string $upi
      */
-    public function __construct(string $productCode, string $name, int $quantity, float $price, string $goodsCode = '', float $vat = 0, string $description = '')
+    public function __construct(string $productCode, string $name, int $quantity, float $price, string $goodsCode = '', float $vat = 0, string $description = '', string $upi = '')
     {
         $this->productCode = $productCode;
         $this->name = $name;
@@ -58,6 +64,7 @@ class Product
         $this->goodsCode = $goodsCode;
         $this->vat = $vat;
         $this->description = $description;
+        $this->upi = $upi;
     }
 
     /**
@@ -116,6 +123,9 @@ class Product
         return $this->description ?? 0;
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
     {
         return [
@@ -125,7 +135,16 @@ class Product
             'Price' => $this->getPrice(),
             'Quantity' => $this->getQuantity(),
             'Vat' => $this->getVat(),
-            'Description' => $this->getDescription()
+            'Description' => $this->getDescription(),
+            'upi' => $this->getUpi()
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getUpi(): string
+    {
+        return $this->upi;
     }
 }

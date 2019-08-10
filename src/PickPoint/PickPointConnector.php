@@ -250,7 +250,7 @@ class PickPointConnector implements DeliveryConnector
                                 "Weight" => $invoice->getPackageSize()->getWeight(),
                                 "GSBarCode" => $invoice->getGcBarCode(),
                                 "CellStorageType" => 0,
-                                "SumEncloses" => [
+                                "SuBEncloses" => [
                                     $invoice->getProducts() // required
                                 ]
                             ]
@@ -735,5 +735,37 @@ class PickPointConnector implements DeliveryConnector
         }
 
         return $statesResult;
+    }
+
+    /**
+     * @param Invoice $invoice
+     * @return mixed
+     * @throws PickPointMethodCallException
+     */
+    public function updateInvoice(Invoice $invoice)
+    {
+        $url = $this->pickPointConf->getHost() . '/updateInvoice';
+
+        $arrayRequest = [
+            'SessionId' => $this->auth(),
+            'InvoiceNumber' => $invoice->getInvoiceNumber(),
+            "PostamatNumber"  => $invoice->getPostamatNumber(),
+            "Phone" => $invoice->getMobilePhone(),
+            "RecipientName" => $invoice->getRecipientName(),
+            "Email" => $invoice->getEmail(),
+            "Sum" => $invoice->getSum(),
+            "BarCode" => $invoice->getBarCode(),
+            "SubEncloses" => $invoice->getProducts()
+        ];
+
+        $request = $this->client->post($url, [
+            'json' => $arrayRequest,
+        ]);
+
+        $response = json_decode($request->getBody()->getContents(), true);
+
+        $this->checkMethodException($response, $url);
+
+        return $response;
     }
 }

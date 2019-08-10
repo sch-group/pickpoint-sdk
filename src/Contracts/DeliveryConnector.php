@@ -150,4 +150,7 @@ interface DeliveryConnector
      */
     public function getInvoiceStatesTrackHistory(string $invoiceNumber);
 
+
+    public function updateInvoice(Invoice $invoiceNumber);
+
 }
