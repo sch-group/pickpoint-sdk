@@ -4,6 +4,8 @@
 namespace PickPointSdk\Components;
 
 
+use phpDocumentor\Reflection\Types\Self_;
+
 class State
 {
     /**
@@ -72,10 +74,19 @@ class State
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getChangeDate(): \DateTime
+    {
+        return $this->changeDate;
+    }
+
+    /**
      * @return string
      */
     public function getPrettyStateText() : string
     {
-        return !empty(self::PRETTY_STATES[$this->state]) ? self::PRETTY_STATES[$this->state] : $this->stateText;
+        $interpretedStates = array_merge(self::PRETTY_STATES, self::FAILED_STATES);
+        return !empty($interpretedStates[$this->state]) ? $interpretedStates[$this->state] : $this->stateText;
     }
 }
