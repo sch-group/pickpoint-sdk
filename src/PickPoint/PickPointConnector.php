@@ -4,17 +4,17 @@ namespace PickPointSdk\PickPoint;
 
 use DateTime;
 use GuzzleHttp\Client;
-use PickPointSdk\Components\CourierCall;
-use PickPointSdk\Components\Invoice;
-use PickPointSdk\Components\InvoiceValidator;
-use PickPointSdk\Components\PackageSize;
-use PickPointSdk\Components\ReceiverDestination;
-use PickPointSdk\Components\SenderDestination;
 use PickPointSdk\Components\State;
+use PickPointSdk\Components\Invoice;
 use PickPointSdk\Components\TariffPrice;
+use PickPointSdk\Components\CourierCall;
+use PickPointSdk\Components\PackageSize;
+use PickPointSdk\Components\InvoiceValidator;
 use PickPointSdk\Contracts\DeliveryConnector;
-use PickPointSdk\Exceptions\PickPointMethodCallException;
 use PickPointSdk\Exceptions\ValidateException;
+use PickPointSdk\Components\SenderDestination;
+use PickPointSdk\Components\ReceiverDestination;
+use PickPointSdk\Exceptions\PickPointMethodCallException;
 
 class PickPointConnector implements DeliveryConnector
 {
@@ -662,4 +662,78 @@ class PickPointConnector implements DeliveryConnector
         return $response;
     }
 
+    /**
+     * @param string $invoiceNumber
+     * @return mixed
+     * @throws PickPointMethodCallException
+     */
+    public function findReestrNumberByInvoice(string $invoiceNumber)
+    {
+        $url = $this->pickPointConf->getHost() . '/getreestrnumber';
+        $array = [
+            'SessionId' => $this->auth(),
+            'InvoiceNumber' => $invoiceNumber,
+        ];
+
+        $request = $this->client->post($url, [
+            'json' => $array,
+        ]);
+
+        $response = json_decode($request->getBody()->getContents(), true);
+
+        $this->checkMethodException($response, $url);
+
+        return $response['Number'];
+    }
+
+    /**
+     * @param array $invoiceNumbers
+     * @return mixed
+     * @throws PickPointMethodCallException
+     */
+    public function getInvoicesTrackHistory(array $invoiceNumbers) : array
+    {
+        $url = $this->pickPointConf->getHost() . '/tracksendings';
+
+        $array = [
+            'SessionId' => $this->auth(),
+            "Invoices" => $invoiceNumbers,
+        ];
+
+        $request = $this->client->post($url, [
+            'json' => $array,
+        ]);
+
+        $response = json_decode($request->getBody()->getContents(), true);
+
+        $this->checkMethodException($response, $url);
+
+        return $response;
+    }
+
+    /**
+     * @param string $invoiceNumber
+     * @return array
+     * @throws \Exception
+     */
+    public function getInvoiceStatesTrackHistory(string $invoiceNumber) : array
+    {
+
+        $invoiceHistory = $this->getInvoicesTrackHistory([$invoiceNumber]);
+        $states = $invoiceHistory['Invoices'][0]['States'] ?? [];
+
+        $statesResult = [];
+        foreach ($states as $state) {
+            $valueObjState = new State(
+                $state['State'],
+                $state['StateMessage'],
+                new \DateTime($state['ChangeDT'])
+            );
+            if (empty($statesResult[$state['State']])) {
+                $statesResult[$state['State']] = $valueObjState;
+            }
+        }
+
+        return $statesResult;
+    }
 }

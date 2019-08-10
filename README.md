@@ -158,3 +158,9 @@ $cancelResponse = $client->cancelCourierCall($courierOrderNumber);
 
 ```
 
+История изменения отпарвления 
+```
+$response = $client->getInvoicesTrackHistory([$invoiceNumber]);
+
+$states = $client->getInvoiceStatesTrackHistory($invoiceNumber);
+```

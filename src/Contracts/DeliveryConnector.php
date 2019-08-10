@@ -132,4 +132,22 @@ interface DeliveryConnector
      */
     public function shipmentInfo(string $invoiceNumber, string $shopOrderNumber);
 
+    /**
+     * @param string $invoiceNumber
+     * @return mixed
+     */
+    public function findReestrNumberByInvoice(string $invoiceNumber);
+
+    /**
+     * @param array $invoices
+     * @return mixed
+     */
+    public function getInvoicesTrackHistory(array $invoiceNumbers);
+
+    /**
+     * @param string $invoiceNumber
+     * @return mixed
+     */
+    public function getInvoiceStatesTrackHistory(string $invoiceNumber);
+
 }

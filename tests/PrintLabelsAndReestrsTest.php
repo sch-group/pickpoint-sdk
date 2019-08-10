@@ -48,4 +48,24 @@ class PrintLabelsAndReestrsTest extends InitTest
         $this->assertNotEmpty($pdfByteCode);
 
     }
+
+
+
+    public function testFindReestrNumberByInvoice()
+    {
+        $invoice = $this->createInvoice();
+        $invoiceNumber = $invoice->getInvoiceNumber();
+
+        $this->client->makeReceipt(array($invoiceNumber));
+
+        $reestrNumber = $this->client->findReestrNumberByInvoice($invoiceNumber);
+
+        $this->assertNotEmpty($reestrNumber);
+
+        $this->assertTrue(is_string($reestrNumber));
+
+        $this->assertTrue(strlen($reestrNumber) > 2);
+
+        echo "reestr = " . $reestrNumber;
+    }
 }
