@@ -175,5 +175,5 @@ $updateInvoice->setInvoiceNumber($invoice->getInvoiceNumber());
 $updateInvoice->setRecipientName("Кек чебурек");
 $updateInvoice->setSum(20.32);
 $updateInvoice->setMobilePhone('+745642411');
-$response = $client->updateЫршзьуте($updateInvoice);
+$response = $client->updateShipment($updateInvoice);
 ```
