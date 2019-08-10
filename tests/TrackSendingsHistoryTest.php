@@ -12,7 +12,7 @@ class TrackSendingsHistoryTest extends InitTest
     {
         $invoice = $this->createInvoice();
         $invoiceNumber = $invoice->getInvoiceNumber();
-        $response = $this->client->getInvoicesTrackHistory([15956026004]);
+        $response = $this->client->getInvoicesTrackHistory([$invoiceNumber]);
         $this->assertEmpty($response['ErrorCode']);
         $states = $this->client->getInvoiceStatesTrackHistory($invoiceNumber);
         $this->assertTrue(is_array($states));

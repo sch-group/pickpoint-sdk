@@ -151,6 +151,16 @@ interface DeliveryConnector
     public function getInvoiceStatesTrackHistory(string $invoiceNumber);
 
 
-    public function updateInvoice(Invoice $invoiceNumber);
+    /**
+     * @param Invoice $invoiceNumber
+     * @return mixed
+     */
+    public function updateShipment(Invoice $invoiceNumber);
+
+    /**
+     * @param string $barCode
+     * @return PackageSize
+     */
+    public function getPackageInfo(string $barCode) : PackageSize;
 
 }

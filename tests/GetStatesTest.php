@@ -15,9 +15,10 @@ class GetStatesTest extends InitTest
         /**
          * @var State $firstState
          */
-        $firstState = $states[0];
+        $firstState = current($states);
+
         $this->assertInstanceOf(State::class, $firstState);
 
-        $this->assertEquals(101, $firstState->getState());
+        $this->assertEquals(101, $firstState->getStateCode());
     }
 }

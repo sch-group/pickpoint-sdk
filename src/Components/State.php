@@ -11,7 +11,7 @@ class State
     /**
      * @var int
      */
-    private $state;
+    private $stateCode;
 
     /**
      * @var string
@@ -50,19 +50,19 @@ class State
      * @param int $state
      * @param string $stateText
      */
-    public function __construct(int $state, string $stateText, \DateTime $changeDate = null)
+    public function __construct(int $stateCode, string $stateText, \DateTime $changeDate = null)
     {
-        $this->state = $state;
         $this->stateText = $stateText;
         $this->changeDate = $changeDate;
+        $this->stateCode = $stateCode;
     }
 
     /**
      * @return int
      */
-    public function getState(): int
+    public function getStateCode(): int
     {
-        return $this->state;
+        return $this->stateCode;
     }
 
     /**
@@ -86,7 +86,8 @@ class State
      */
     public function getPrettyStateText() : string
     {
-        $interpretedStates = array_merge(self::PRETTY_STATES, self::FAILED_STATES);
-        return !empty($interpretedStates[$this->state]) ? $interpretedStates[$this->state] : $this->stateText;
+        $interpretedStates = array_replace(self::PRETTY_STATES, self::FAILED_STATES);
+
+        return !empty($interpretedStates[$this->stateCode]) ? $interpretedStates[$this->stateCode] : $this->stateText;
     }
 }

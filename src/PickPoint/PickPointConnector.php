@@ -331,7 +331,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function cancelInvoice(string $invoiceNumber = '', string $senderCode = '') : array
+    public function cancelInvoice(string $invoiceNumber = '', string $senderCode = ''): array
     {
         $url = $this->pickPointConf->getHost() . '/cancelInvoice';
 
@@ -339,11 +339,11 @@ class PickPointConnector implements DeliveryConnector
             'SessionId' => $this->auth(),
             "IKN" => $this->pickPointConf->getIKN(),
         ];
-        if(!empty($invoiceNumber)) {
+        if (!empty($invoiceNumber)) {
             $requestArray['InvoiceNumber'] = $invoiceNumber;
         }
 
-        if(!empty($senderCode)) {
+        if (!empty($senderCode)) {
             $requestArray["GCInvoiceNumber"] = $senderCode;
         }
 
@@ -548,7 +548,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function callCourier(CourierCall $courierCall) : CourierCall
+    public function callCourier(CourierCall $courierCall): CourierCall
     {
         $url = $this->pickPointConf->getHost() . '/courier';
         $array = [
@@ -583,7 +583,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function cancelCourierCall(string $callOrderNumber) : array
+    public function cancelCourierCall(string $callOrderNumber): array
     {
         $url = $this->pickPointConf->getHost() . '/couriercancel';
         $array = [
@@ -642,7 +642,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function shipmentInfo(string $invoiceNumber, string $shopOrderNumber = '') : array
+    public function shipmentInfo(string $invoiceNumber, string $shopOrderNumber = ''): array
     {
         $url = $this->pickPointConf->getHost() . '/sendinginfo';
         $array = [
@@ -691,7 +691,7 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function getInvoicesTrackHistory(array $invoiceNumbers) : array
+    public function getInvoicesTrackHistory(array $invoiceNumbers): array
     {
         $url = $this->pickPointConf->getHost() . '/tracksendings';
 
@@ -716,7 +716,7 @@ class PickPointConnector implements DeliveryConnector
      * @return array
      * @throws \Exception
      */
-    public function getInvoiceStatesTrackHistory(string $invoiceNumber) : array
+    public function getInvoiceStatesTrackHistory(string $invoiceNumber): array
     {
 
         $invoiceHistory = $this->getInvoicesTrackHistory([$invoiceNumber]);
@@ -742,21 +742,27 @@ class PickPointConnector implements DeliveryConnector
      * @return mixed
      * @throws PickPointMethodCallException
      */
-    public function updateInvoice(Invoice $invoice)
+    public function updateShipment(Invoice $invoice): array
     {
         $url = $this->pickPointConf->getHost() . '/updateInvoice';
 
         $arrayRequest = [
             'SessionId' => $this->auth(),
             'InvoiceNumber' => $invoice->getInvoiceNumber(),
-            "PostamatNumber"  => $invoice->getPostamatNumber(),
-            "Phone" => $invoice->getMobilePhone(),
-            "RecipientName" => $invoice->getRecipientName(),
-            "Email" => $invoice->getEmail(),
-            "Sum" => $invoice->getSum(),
-            "BarCode" => $invoice->getBarCode(),
-            "SubEncloses" => $invoice->getProducts()
+            'BarCode' => $invoice->getBarCode()
         ];
+        if (!empty($invoice->getPostamatNumber())) {
+            $arrayRequest['PostamatNumber'] = $invoice->getPostamatNumber();
+        }
+        if (!empty($invoice->getMobilePhone())) {
+            $arrayRequest['RecipientName'] = $invoice->getRecipientName();
+        }
+        if (!empty($invoice->getEmail())) {
+            $arrayRequest['Email'] = $invoice->getEmail();
+        }
+        if (!empty($invoice->getSum())) {
+            $arrayRequest['Sum'] = $invoice->getSum();
+        }
 
         $request = $this->client->post($url, [
             'json' => $arrayRequest,
@@ -767,5 +773,35 @@ class PickPointConnector implements DeliveryConnector
         $this->checkMethodException($response, $url);
 
         return $response;
+    }
+
+
+    /**
+     * @param string $barCode
+     * @return PackageSize
+     * @throws PickPointMethodCallException
+     */
+    public function getPackageInfo(string $barCode): PackageSize
+    {
+        $url = $this->pickPointConf->getHost() . '/encloseinfo';
+
+        $arrayRequest = [
+            'SessionId' => $this->auth(),
+            'BarCode' => $barCode
+        ];
+
+        $request = $this->client->post($url, [
+            'json' => $arrayRequest,
+        ]);
+
+        $response = json_decode($request->getBody()->getContents(), true);
+
+        $this->checkMethodException($response, $url);
+
+        $enclose = $response['Enclose'];
+
+        $packageSize = new PackageSize($enclose['Width'], $enclose['Height'], $enclose['Depth'], $enclose['Weight']);
+
+        return $packageSize;
     }
 }

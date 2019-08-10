@@ -1,4 +1,8 @@
-API PICKPOINT CONNECTOR
+API PICKPOINT PHP SDK
+
+https://pickpoint.ru/sales/api/
+
+@ainurecm telegram
 
 ```bash
 composer require sch-group/pickpoint
@@ -158,9 +162,18 @@ $cancelResponse = $client->cancelCourierCall($courierOrderNumber);
 
 ```
 
-История изменения отпарвления 
+История изменения отправления 
 ```
 $response = $client->getInvoicesTrackHistory([$invoiceNumber]);
 
 $states = $client->getInvoiceStatesTrackHistory($invoiceNumber);
+```
+
+Обновление полей отправления
+```
+$updateInvoice->setInvoiceNumber($invoice->getInvoiceNumber());
+$updateInvoice->setRecipientName("Кек чебурек");
+$updateInvoice->setSum(20.32);
+$updateInvoice->setMobilePhone('+745642411');
+$response = $client->updateЫршзьуте($updateInvoice);
 ```
