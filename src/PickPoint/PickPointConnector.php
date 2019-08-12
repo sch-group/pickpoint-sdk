@@ -69,6 +69,14 @@ class PickPointConnector implements DeliveryConnector
     }
 
     /**
+     * @return PackageSize
+     */
+    public function getDefaultPackageSize(): PackageSize
+    {
+        return $this->defaultPackageSize;
+    }
+
+    /**
      * @return SenderDestination
      */
     public function getSenderDestination(): SenderDestination
