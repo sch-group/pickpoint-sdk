@@ -762,8 +762,11 @@ class PickPointConnector implements DeliveryConnector
         if (!empty($invoice->getPostamatNumber())) {
             $arrayRequest['PostamatNumber'] = $invoice->getPostamatNumber();
         }
-        if (!empty($invoice->getMobilePhone())) {
+        if (!empty($invoice->getRecipientName())) {
             $arrayRequest['RecipientName'] = $invoice->getRecipientName();
+        }
+        if (!empty($invoice->getMobilePhone())) {
+            $arrayRequest['Phone'] = $invoice->getMobilePhone();
         }
         if (!empty($invoice->getEmail())) {
             $arrayRequest['Email'] = $invoice->getEmail();
