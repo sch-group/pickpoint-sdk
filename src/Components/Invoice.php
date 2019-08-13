@@ -301,7 +301,7 @@ class Invoice
      */
     public function setPostageType(string $postageType = 'paid')
     {
-        $this->postageType = $postageType == 'paid' ? self::POSTAGE_TYPE_STANDARD : self::POSTAGE_TYPE_STANDARD_NP;;
+        $this->postageType = $postageType == 'paid' ? self::POSTAGE_TYPE_STANDARD : self::POSTAGE_TYPE_STANDARD_NP;
         if ($this->postageType == self::POSTAGE_TYPE_STANDARD) {
             $this->setSum(0);
         }
@@ -328,7 +328,7 @@ class Invoice
      */
     public function getSum() : float
     {
-        return $this->sum ?? 0;
+        return $this->sum ?? null;
     }
 
     /**

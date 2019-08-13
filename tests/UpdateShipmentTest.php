@@ -15,12 +15,13 @@ class UpdateShipmentTest extends InitTest
         $updateInvoice = new Invoice();
         $updateInvoice->setInvoiceNumber($invoice->getInvoiceNumber());
         $newFio = "Кек чебурек";
-        $newSum = 20.32;
+        $newSum = 0;
         $updateInvoice->setRecipientName($newFio);
         $updateInvoice->setSum($newSum);
+        $updateInvoice->setPostageType('paid');
         $updateInvoice->setMobilePhone('+745642411');
         $response = $this->client->updateShipment($updateInvoice);
-
+        print_r($response);
         $invoiceInfo = $this->client->shipmentInfo($invoice->getInvoiceNumber());
 
         $this->assertEquals($invoiceInfo['FIO'], $newFio);
