@@ -43,6 +43,7 @@ class PrintLabelsAndReestrsTest extends InitTest
         $invoice = $this->createInvoice();
         $invoiceNumber = $invoice->getInvoiceNumber();
         $pdfByteCode = $this->client->makeReceiptAndPrint(array($invoiceNumber));
+        print_r($pdfByteCode);
 
         $this->assertTrue(is_string($pdfByteCode));
         $this->assertNotEmpty($pdfByteCode);

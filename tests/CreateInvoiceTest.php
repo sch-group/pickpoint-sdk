@@ -36,6 +36,8 @@ class CreateInvoiceTest extends InitTest
 
         $response = $this->client->createShipment($invoice);
 
+        print_r($response);
+
         $this->assertEquals($response['CreatedSendings'][0]['SenderCode'], $senderCode);
 
     }

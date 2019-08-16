@@ -90,9 +90,12 @@ class PickPointConnector implements DeliveryConnector
      */
     private function auth()
     {
-        if (!empty($this->redisCache) && !empty($this->redisCache->get(self::CACHE_SESSION_KEY))) {
-            return $this->redisCache->get(self::CACHE_SESSION_KEY);
+        $cacheKey = self::CACHE_SESSION_KEY . '_' . $this->pickPointConf->getIKN();
+
+        if (!empty($this->redisCache) && !empty($this->redisCache->get($cacheKey))) {
+            return $this->redisCache->get($cacheKey);
         }
+
         $loginUrl = $this->pickPointConf->getHost() . '/login';
 
         try {
@@ -105,7 +108,7 @@ class PickPointConnector implements DeliveryConnector
             $response = json_decode($request->getBody()->getContents(), true);
 
             if (!empty($this->redisCache)) {
-                $this->redisCache->setex(self::CACHE_SESSION_KEY, self::CACHE_SESSION_LIFE_TIME, $response['SessionId']);
+                $this->redisCache->setex($cacheKey, self::CACHE_SESSION_LIFE_TIME, $response['SessionId']);
             }
 
         } catch (\Exception $exception) {
