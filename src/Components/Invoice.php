@@ -139,6 +139,11 @@ class Invoice
     private $cellStorageType;
 
     /**
+     * @var float
+     */
+    private $insuareValue;
+
+    /**
      * @return array
      */
     public function getPostageTypes() : array
@@ -559,6 +564,22 @@ class Invoice
     public function setEdtn(string $edtn)
     {
         $this->edtn = $edtn;
+    }
+
+    /**
+     * @return float
+     */
+    public function getInsuareValue(): float
+    {
+        return $this->insuareValue ?? 0;
+    }
+
+    /**
+     * @param float $insuareValue
+     */
+    public function setInsuareValue(float $insuareValue)
+    {
+        $this->insuareValue = $insuareValue;
     }
 
 }

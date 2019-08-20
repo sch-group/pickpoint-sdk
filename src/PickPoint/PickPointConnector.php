@@ -244,6 +244,7 @@ class PickPointConnector implements DeliveryConnector
                         "PayType" => Invoice::PAY_TYPE,
                         "Sum" => $invoice->getSum(), // required
                         "PrepaymentSum" => $invoice->getPrepaymentSum(),
+                        "InsuareValue" => $invoice->getInsuareValue(),
                         "DeliveryVat" => $invoice->getDeliveryVat(),
                         "DeliveryFee" => $invoice->getDeliveryFee(),
                         "DeliveryMode" => $invoice->getDeliveryMode(), // required

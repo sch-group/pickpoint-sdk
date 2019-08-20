@@ -47,6 +47,7 @@ class InitTest extends TestCase
         $invoice->setPostageType('unpiad');
         $invoice->setGettingType('sc');
         $invoice->setSum(10.00);
+        $invoice->setInsuareValue(10.00);
         $invoice->setDeliveryMode('priority');
 
         $packageSize = new PackageSize(20, 20, 20);
