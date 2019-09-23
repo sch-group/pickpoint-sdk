@@ -750,6 +750,55 @@ class PickPointConnector implements DeliveryConnector
     }
 
     /**
+     *
+     * @param array $invoiceNumbers
+     * @return array
+     * @throws PickPointMethodCallException
+     */
+    public function getArrayInvoicesWithTrackHistory(array $invoiceNumbers): array
+    {
+        $invoiceHistory = $this->getInvoicesTrackHistory($invoiceNumbers);
+        $invoiceNumbersWithHistory = [];
+
+        foreach ($invoiceHistory['Invoices'] as $invoice) {
+            $states = $invoice['States'] ?? [];
+            $statesResult = [];
+            foreach ($states as $state) {
+                $valueObjState = new State(
+                    $state['State'],
+                    $state['StateMessage'],
+                    new \DateTime($state['ChangeDT'])
+                );
+                if (empty($statesResult[$state['State']])) {
+                    $statesResult[$state['State']] = $valueObjState;
+                }
+            }
+            if (in_array($invoice['InvoiceNumber'], $invoiceNumbers)) {
+                $invoiceNumbersWithHistory[$invoice['InvoiceNumber']] = $statesResult;
+            }
+        }
+
+        return $invoiceNumbersWithHistory;
+    }
+
+    /**
+     * @param array $invoiceNumbers
+     * @return array
+     * @throws PickPointMethodCallException
+     */
+    public function getInvoicesLastStates(array $invoiceNumbers): array
+    {
+        $invoiceNumbersWithHistory = $this->getArrayInvoicesWithTrackHistory($invoiceNumbers);
+        $invoicesWithFinalStates = [];
+        foreach ($invoiceNumbersWithHistory as $invoiceNumber => $history) {
+            $finalState = end($history);
+            $invoicesWithFinalStates[$invoiceNumber] = $finalState;
+        }
+
+        return $invoicesWithFinalStates;
+    }
+
+    /**
      * @param Invoice $invoice
      * @return mixed
      * @throws PickPointMethodCallException
@@ -779,7 +828,7 @@ class PickPointConnector implements DeliveryConnector
             $arrayRequest['Sum'] = $invoice->getSum();
         }
 
-        if(!empty($invoice->getProducts())) {
+        if (!empty($invoice->getProducts())) {
             $arrayRequest['SubEncloses'] = $invoice->getProducts();
         }
 

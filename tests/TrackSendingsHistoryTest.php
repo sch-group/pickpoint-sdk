@@ -8,6 +8,9 @@ use PickPointSdk\Components\State;
 
 class TrackSendingsHistoryTest extends InitTest
 {
+    /**
+     * @throws \PickPointSdk\Exceptions\PickPointMethodCallException
+     */
     public function testSendingsHistory()
     {
         $invoice = $this->createInvoice();
@@ -23,4 +26,28 @@ class TrackSendingsHistoryTest extends InitTest
         $this->assertTrue(is_string($state->getPrettyStateText()));
 
     }
+
+    /**
+     * @throws \PickPointSdk\Exceptions\PickPointMethodCallException
+     */
+    public function testSendingsArrayHistory()
+    {
+        $invoice = $this->createInvoice();
+        $invoiceNumberOne = $invoice->getInvoiceNumber();
+        $invoice = $this->createInvoice();
+        $invoiceNumberTwo = $invoice->getInvoiceNumber();
+        $invoiceNumbers = array($invoiceNumberOne, $invoiceNumberTwo);
+        $pdfByteCode = $this->client->makeReceiptAndPrint([$invoiceNumberOne]);
+
+        $finalStates = $this->client->getInvoicesLastStates($invoiceNumbers);
+        /**
+         * @var State $finalStateOne
+         */
+        $finalStateOne = $finalStates[$invoiceNumberOne];
+        $finalStateTwo = $finalStates[$invoiceNumberTwo];
+        $this->assertEquals($finalStateOne->getStateCode(), 102);
+        $this->assertEquals($finalStateTwo->getStateCode(), 101);
+
+    }
+
 }

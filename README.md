@@ -167,6 +167,9 @@ $cancelResponse = $client->cancelCourierCall($courierOrderNumber);
 $response = $client->getInvoicesTrackHistory([$invoiceNumber]);
 
 $states = $client->getInvoiceStatesTrackHistory($invoiceNumber);
+
+$lastSates = $client->getInvoicesLastStates([$invoiceNumber]);
+
 ```
 
 Обновление полей отправления
