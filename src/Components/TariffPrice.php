@@ -6,6 +6,11 @@ namespace PickPointSdk\Components;
 
 class TariffPrice
 {
+    const STANDARD_DELIVERY_TARIFF = 'Standard';
+
+    const PRIORITY_DELIVERY_TARIFF = 'Priority';
+
+    const DELIVERY_TARIFFS = ['Standard', 'Priority'];
     /**
      * @var int
      */
@@ -72,6 +77,14 @@ class TariffPrice
         $this->zone = $zone;
         $this->errorMessage = $errorMessage;
         $this->errorCode = $errorCode;
+        $this->tariffType = $tariffType;
+    }
+
+    /**
+     * @param string $tariffType
+     */
+    public function setTariffType(string $tariffType)
+    {
         $this->tariffType = $tariffType;
     }
 
@@ -145,7 +158,7 @@ class TariffPrice
      */
     public function getStandardCommonPrice()
     {
-        return $this->getPriceByType('Standard');
+        return $this->getPriceByType(self::STANDARD_DELIVERY_TARIFF);
     }
 
     /**
@@ -153,7 +166,7 @@ class TariffPrice
      */
     public function getPriorityCommonPrice()
     {
-        return $this->getPriceByType('Priority');
+        return $this->getPriceByType(self::PRIORITY_DELIVERY_TARIFF);
     }
 
     /**
@@ -162,7 +175,7 @@ class TariffPrice
      */
     private function getPriceByType($type)
     {
-        if (!in_array($type, ['Standard', 'Priority'])) {
+        if (!in_array($type, self::DELIVERY_TARIFFS)) {
             return 0;
         }
         $sum = 0;
@@ -180,7 +193,7 @@ class TariffPrice
     public function existsPriorityType(): bool
     {
         foreach ($this->prices as $price) {
-            if ($price['DeliveryMode'] == 'Priority') {
+            if ($price['DeliveryMode'] == self::PRIORITY_DELIVERY_TARIFF) {
                 return true;
             }
         }
@@ -192,7 +205,7 @@ class TariffPrice
      */
     public function getPrice()
     {
-        if ($this->tariffType == 'Standard') {
+        if ($this->tariffType == self::STANDARD_DELIVERY_TARIFF) {
             return $this->getStandardCommonPrice();
         }
         return $this->getPriorityCommonPrice();
@@ -203,7 +216,7 @@ class TariffPrice
      */
     public function getDeliveryPeriodMin()
     {
-        if ($this->tariffType == 'Standard') {
+        if ($this->tariffType == self::STANDARD_DELIVERY_TARIFF) {
             return $this->getStandardMinDay();
         }
         return $this->getPriorityMinDay();
@@ -214,7 +227,7 @@ class TariffPrice
      */
     public function getDeliveryPeriodMax()
     {
-        if ($this->tariffType == 'Standard') {
+        if ($this->tariffType == self::STANDARD_DELIVERY_TARIFF) {
             return $this->getStandardMaxDay();
         }
         return $this->getPriorityMaxDay();
