@@ -89,6 +89,14 @@ class TariffPrice
     }
 
     /**
+     * @return string
+     */
+    public function getTariffType(): string
+    {
+        return $this->tariffType;
+    }
+
+    /**
      * @return int
      */
     public function getPriorityMaxDay(): int
