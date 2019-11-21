@@ -148,17 +148,18 @@ class TariffPrice
         return $this->getPriceByType('Standard');
     }
 
-    public function getPriorityCommponPrice()
+    /**
+     * @return int|mixed
+     */
+    public function getPriorityCommonPrice()
     {
         return $this->getPriceByType('Priority');
     }
 
-
-    private function getPriorityPrice()
-    {
-        return $this->getPriceByType('Priority');
-    }
-
+    /**
+     * @param $type
+     * @return int|mixed
+     */
     private function getPriceByType($type)
     {
         if (!in_array($type, ['Standard', 'Priority'])) {
@@ -173,6 +174,9 @@ class TariffPrice
         return $sum;
     }
 
+    /**
+     * @return bool
+     */
     public function existsPriorityType(): bool
     {
         foreach ($this->prices as $price) {
@@ -183,25 +187,34 @@ class TariffPrice
         return false;
     }
 
+    /**
+     * @return float|int|mixed
+     */
     public function getPrice()
     {
         if ($this->tariffType == 'Standard') {
             return $this->getStandardCommonPrice();
         }
-        return $this->getStandardCommonPrice();
+        return $this->getPriorityCommonPrice();
     }
 
+    /**
+     * @return int
+     */
     public function getDeliveryPeriodMin()
     {
-        if($this->tariffType == 'Standard') {
+        if ($this->tariffType == 'Standard') {
             return $this->getStandardMinDay();
         }
         return $this->getPriorityMinDay();
     }
 
+    /**
+     * @return int
+     */
     public function getDeliveryPeriodMax()
     {
-        if($this->tariffType == 'Standard') {
+        if ($this->tariffType == 'Standard') {
             return $this->getStandardMaxDay();
         }
         return $this->getPriorityMaxDay();
