@@ -493,9 +493,11 @@ class Invoice
     /**
      * @param string $deliveryMode
      */
-    public function setDeliveryMode(string $deliveryMode = 'standard')
+    public function setDeliveryMode(string $deliveryMode = '')
     {
-        $this->deliveryMode = $deliveryMode == 'standard' ? self::DELIVERY_MODE_STANDARD : self::DELIVERY_MODE_PRIORITY;
+        $this->deliveryMode = $deliveryMode == TariffPrice::PRIORITY_DELIVERY_TARIFF ?
+            self::DELIVERY_MODE_PRIORITY :
+            self::DELIVERY_MODE_STANDARD;
     }
 
     /**
