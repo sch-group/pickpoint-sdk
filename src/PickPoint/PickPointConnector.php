@@ -332,7 +332,7 @@ class PickPointConnector implements DeliveryConnector
 
         $this->checkMethodException($response, $url);
 
-        $response = $response[0] ?? [];
+        $response = isset($response) && is_array($response) ? array_pop($response) : [];
 
         return new State($response['State'] ?? 0, $response['StateMessage'] ?? '');
     }
@@ -381,6 +381,30 @@ class PickPointConnector implements DeliveryConnector
         $invoices = !empty($invoiceNumbers) ? $invoiceNumbers : [];
 
         $url = $this->pickPointConf->getHost() . '/makelabel';
+        $request = $this->client->post($url, [
+            'json' => [
+                'SessionId' => $this->auth(),
+                "Invoices" => $invoices,
+            ],
+        ]);
+        $response = $request->getBody()->getContents();
+
+        $this->checkMethodException($response, $url);
+
+        return $response;
+    }
+
+    /**
+     * Marks on packages (zebra printer)
+     * @param array $invoiceNumbers
+     * @return mixed
+     * @throws PickPointMethodCallException
+     */
+    public function printZLabel(array $invoiceNumbers): string
+    {
+        $invoices = !empty($invoiceNumbers) ? $invoiceNumbers : [];
+
+        $url = $this->pickPointConf->getHost() . '/makezlabel';
         $request = $this->client->post($url, [
             'json' => [
                 'SessionId' => $this->auth(),

@@ -22,6 +22,18 @@ class PrintLabelsAndReestrsTest extends InitTest
         $this->assertNotEmpty($pdfByteCode);
     }
 
+    public function testPrintZLabel()
+    {
+        /**
+         * Invoice $invoice
+         */
+        $invoice = $this->createInvoice();
+        $invoiceNumber = $invoice->getInvoiceNumber();
+        $pdfByteCode = $this->client->printZLabel(array($invoiceNumber));
+        $this->assertTrue(is_string($pdfByteCode));
+        $this->assertNotEmpty($pdfByteCode);
+    }
+
     public function testMakeReestr()
     {
         /**
