@@ -136,50 +136,6 @@ class CreateInvoiceTest extends InitTest
 
     }
 
-    public function testUnpaidPostageTypeButSumEqualsZero()
-    {
-        $senderCode = 'order:' .(new \DateTime('now'))->getTimestamp();
-        $invoice = new Invoice();
-        $invoice->setSenderCode($senderCode);
-        $invoice->setDescription('TEST TEST');
-        $invoice->setRecipientName('Test');
-        $invoice->setMobilePhone('+79274269594');
-
-        $invoice->setPostamatNumber('5602-009');
-        $invoice->setGettingType('courier');
-
-        $invoice->setSum(0); // SUM MUST BE > 0 for unpaid
-        $invoice->setPrepaymentSum(10);
-        $invoice->setDeliveryMode('standard');
-
-        $product = new Product('number 234', 'Test', 2, 100);
-
-
-        $invoice->setProducts([$product]);
-        $this->expectException(\PickPointSdk\Exceptions\ValidateException::class);
-        $response = $this->client->createShipment($invoice);
-
-    }
-
-    public function testPaidPostageTypeButSumNotEqualsZero()
-    {
-        $senderCode = 'order:' .(new \DateTime('now'))->getTimestamp();
-        $invoice = new Invoice();
-        $invoice->setSenderCode($senderCode);
-        $invoice->setDescription('TEST TEST');
-        $invoice->setRecipientName('Test');
-        $invoice->setMobilePhone('+79274269594');
-
-        $invoice->setPostamatNumber('5602-009');
-        $invoice->setGettingType('courier');
-
-        $invoice->setSum(10); // SUM MUST BE = 0 for paid
-        $invoice->setPrepaymentSum(10);
-        $invoice->setDeliveryMode('standard');
-
-        $this->expectException(\PickPointSdk\Exceptions\ValidateException::class);
-        $response = $this->client->createShipment($invoice);
-    }
 
     public function testInvoiceWithoutProducts()
     {
