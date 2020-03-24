@@ -18,7 +18,6 @@ class UpdateShipmentTest extends InitTest
         $newSum = 0;
         $updateInvoice->setRecipientName($newFio);
         $updateInvoice->setSum($newSum);
-        $updateInvoice->setPostageType('paid');
         $updateInvoice->setMobilePhone('+745642411');
         $response = $this->client->updateShipment($updateInvoice);
         print_r($response);

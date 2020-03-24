@@ -298,18 +298,7 @@ class Invoice
      */
     public function getPostageType() : string
     {
-        return $this->postageType ?? '';
-    }
-
-    /**
-     * @param string $postageType
-     */
-    public function setPostageType(string $postageType = 'paid')
-    {
-        $this->postageType = $postageType == 'paid' ? self::POSTAGE_TYPE_STANDARD : self::POSTAGE_TYPE_STANDARD_NP;
-        if ($this->postageType == self::POSTAGE_TYPE_STANDARD) {
-            $this->setSum(0);
-        }
+        return $this->getSum() == 0 ? self::POSTAGE_TYPE_STANDARD : self::POSTAGE_TYPE_STANDARD_NP;
     }
 
     /**

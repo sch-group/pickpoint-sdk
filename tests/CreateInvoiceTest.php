@@ -22,7 +22,6 @@ class CreateInvoiceTest extends InitTest
         $invoice->setMobilePhone('+79274269594');
 
         $invoice->setEmail('ainur_ahmetgalie@mail.ru');
-        $invoice->setPostageType('unpaid');
         $invoice->setGettingType('sc');
         $invoice->setSum(10.00);
         $invoice->setDeliveryMode('standard');
@@ -53,7 +52,6 @@ class CreateInvoiceTest extends InitTest
 
         $invoice->setPostamatNumber('5602-009');
         $invoice->setEmail('ainur_ahmetgalie@mail.ru');
-        $invoice->setPostageType('paid');
         $invoice->setGettingType('sc');
         $invoice->setSum(0); // IMPORTANT
         $invoice->setPrepaymentSum(10);
@@ -90,7 +88,6 @@ class CreateInvoiceTest extends InitTest
 
         $invoice->setPostamatNumber('5602-009');
         $invoice->setEmail('ainur_ahmetgalie@mail.ru');
-        $invoice->setPostageType('paid');
         $invoice->setGettingType('sc');
 
         $invoice->setSum(0); // IMPORTANT
@@ -121,7 +118,6 @@ class CreateInvoiceTest extends InitTest
         $invoice->setMobilePhone('+79274269594');
 
         $invoice->setPostamatNumber('5602-009');
-        $invoice->setPostageType('paid');
         $invoice->setGettingType('sc');
 
         $invoice->setSum(0); // IMPORTANT
@@ -150,7 +146,6 @@ class CreateInvoiceTest extends InitTest
         $invoice->setMobilePhone('+79274269594');
 
         $invoice->setPostamatNumber('5602-009');
-        $invoice->setPostageType('unpaid');
         $invoice->setGettingType('courier');
 
         $invoice->setSum(0); // SUM MUST BE > 0 for unpaid
@@ -176,7 +171,6 @@ class CreateInvoiceTest extends InitTest
         $invoice->setMobilePhone('+79274269594');
 
         $invoice->setPostamatNumber('5602-009');
-        $invoice->setPostageType('paid');
         $invoice->setGettingType('courier');
 
         $invoice->setSum(10); // SUM MUST BE = 0 for paid
@@ -198,7 +192,6 @@ class CreateInvoiceTest extends InitTest
 
         $invoice->setPostamatNumber('5602-009');
         $invoice->setEmail('ainur_ahmetgalie@mail.ru');
-        $invoice->setPostageType('paid');
         $invoice->setGettingType('sc');
         $invoice->setSum(0); // IMPORTANT
         $invoice->setPrepaymentSum(10);

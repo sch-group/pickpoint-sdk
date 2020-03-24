@@ -64,7 +64,6 @@ $invoice->setDescription('Custom zakaz');
 $invoice->setRecipientName('Саша');
 $invoice->setMobilePhone('+79274269590');
 $invoice->setEmail('kek@mail.ru');
-$invoice->setPostageType('unpiad'); // paid or unpaid
 $invoice->setGettingType('sc'); // courier or sc
 $invoice->setSum(500.00);
 $invoice->setDeliveryMode('standard'); // stanadard or priority

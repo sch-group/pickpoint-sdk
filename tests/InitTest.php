@@ -44,7 +44,6 @@ class InitTest extends TestCase
         $invoice->setMobilePhone('+79274269594');
 
         $invoice->setEmail('ainur_ahmetgalie@mail.ru');
-        $invoice->setPostageType('unpiad');
         $invoice->setGettingType('sc');
         $invoice->setSum(10.00);
         $invoice->setInsuareValue(10.00);
