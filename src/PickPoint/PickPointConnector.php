@@ -824,9 +824,12 @@ class PickPointConnector implements DeliveryConnector
         if (!empty($invoice->getEmail())) {
             $arrayRequest['Email'] = $invoice->getEmail();
         }
-        if (!empty($invoice->getSum() || $invoice->getPostageType() == Invoice::POSTAGE_TYPE_STANDARD)) {
-            $arrayRequest['Sum'] = $invoice->getSum();
-        }
+
+        $arrayRequest['PostageType'] = $invoice->getSum() == 0
+            ? Invoice::POSTAGE_TYPE_STANDARD
+            : Invoice::POSTAGE_TYPE_STANDARD_NP;
+
+        $arrayRequest['Sum'] = $invoice->getSum();
 
         if (!empty($invoice->getProducts())) {
             $arrayRequest['SubEncloses'] = $invoice->getProducts();
