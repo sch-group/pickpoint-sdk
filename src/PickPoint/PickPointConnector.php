@@ -922,6 +922,6 @@ class PickPointConnector implements DeliveryConnector
 
         $this->checkMethodException($response, $url);
 
-        return $response;
+        return $response['PostamatList'] ?? null;
     }
 }
