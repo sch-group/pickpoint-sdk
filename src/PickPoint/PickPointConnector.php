@@ -899,4 +899,29 @@ class PickPointConnector implements DeliveryConnector
 
         return $packageSize;
     }
+
+    /**
+     * @param int $postIndex
+     * @return mixed
+     * @throws PickPointMethodCallException
+     */
+    public function getClosestPostamatList(int $postIndex)
+    {
+        $url = $this->pickPointConf->getHost() . '/postindexpostamatlist';
+
+        $arrayRequest = [
+            'SessionId' => $this->auth(),
+            'PostIndex' => $postIndex
+        ];
+
+        $request = $this->client->post($url, [
+            'json' => $arrayRequest,
+        ]);
+
+        $response = json_decode($request->getBody()->getContents(), true);
+
+        $this->checkMethodException($response, $url);
+
+        return $response['PostamatList'] ?? null;
+    }
 }
