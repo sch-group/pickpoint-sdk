@@ -899,4 +899,36 @@ class PickPointConnector implements DeliveryConnector
 
         return $packageSize;
     }
+
+    /**
+     * Команда предназначена для получения акта возврата денег.
+     * https://pickpoint.ru/sales/api/#_Toc24018654
+     * @param null $actNumber
+     * @param null $dateFrom
+     * @param null $dateEnd
+     * @return mixed|null
+     * @throws PickPointMethodCallException
+     */
+    public function getMoneyReturnOrder($actNumber = null, $dateFrom = null, $dateEnd = null)
+    {
+        $url = $this->pickPointConf->getHost() . '/getmoneyreturnorder';
+
+        $arrayRequest = [
+            'SessionId' => $this->auth(),
+            'IKN' => $this->pickPointConf->getIKN(),
+            'DocumentNumber' => $actNumber,
+            'DateFrom' => $dateFrom,
+            'DateEnd' => $dateEnd
+        ];
+
+        $request = $this->client->post($url, [
+            'json' => $arrayRequest,
+        ]);
+
+        $response = json_decode($request->getBody()->getContents(), true);
+
+        $this->checkMethodException($response, $url);
+
+        return $response ?? null;
+    }
 }
