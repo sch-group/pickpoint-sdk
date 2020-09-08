@@ -901,6 +901,31 @@ class PickPointConnector implements DeliveryConnector
     }
 
     /**
+     * @param int $postIndex
+     * @return mixed
+     * @throws PickPointMethodCallException
+     */
+    public function getClosestPostamatList(int $postIndex)
+    {
+        $url = $this->pickPointConf->getHost() . '/postindexpostamatlist';
+
+        $arrayRequest = [
+            'SessionId' => $this->auth(),
+            'PostIndex' => $postIndex
+        ];
+
+        $request = $this->client->post($url, [
+            'json' => $arrayRequest,
+        ]);
+
+        $response = json_decode($request->getBody()->getContents(), true);
+
+        $this->checkMethodException($response, $url);
+
+        return $response['PostamatList'] ?? null;
+    }
+
+    /**
      * Команда предназначена для получения акта возврата денег.
      * https://pickpoint.ru/sales/api/#_Toc24018654
      * @param null $actNumber
