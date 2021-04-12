@@ -53,15 +53,16 @@ class PickPointConnector implements DeliveryConnector
      * @param SenderDestination|null $senderDestination
      * @param PackageSize|null $packageSize
      * @param array $predisConf
+     * @param Client|null $guzzleClient
      */
     public function __construct(
         PickPointConf $pickPointConf,
         SenderDestination $senderDestination,
         PackageSize $packageSize = null,
-        array $predisConf = []
-    )
-    {
-        $this->client = new Client();
+        array $predisConf = [],
+        Client $guzzleClient = null
+    ) {
+        $this->client = $guzzleClient ?: new Client();
         $this->pickPointConf = $pickPointConf;
         $this->senderDestination = $senderDestination;
         $this->defaultPackageSize = $packageSize;
