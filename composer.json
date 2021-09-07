@@ -4,12 +4,12 @@
     "type": "library",
     "require": {
         "php": ">=7.0",
-        "guzzlehttp/guzzle": "^6.2",
+        "guzzlehttp/guzzle": ">=6.2",
         "predis/predis": "^1.1.1"
     },
     "require-dev": {
         "predis/predis": "1.1.1",
-        "guzzlehttp/guzzle": "^6.2",
+        "guzzlehttp/guzzle": ">=6.2",
         "piwik/ini": "^2.0",
         "phpunit/phpunit": "~6.5.5"
     },
