@@ -770,7 +770,24 @@ class PickPointConnector implements DeliveryConnector
             }
         }
 
-        return $statesResult;
+        return $this->sortArrayOfStatesByDateAsc($statesResult);
+    }
+
+    /**
+     * @param array $states
+     * @return array
+     */
+    public function sortArrayOfStatesByDateAsc(array $states): array
+    {
+        usort($states, function (State $a, State $b) {
+            if ($a->getChangeDate() === $b->getChangeDate()) {
+                return 0;
+            }
+
+            return $a->getChangeDate() < $b->getChangeDate() ? -1 : 1;
+        });
+
+        return $states;
     }
 
     /**
@@ -798,7 +815,7 @@ class PickPointConnector implements DeliveryConnector
                 }
             }
             if (in_array($invoice['InvoiceNumber'], $invoiceNumbers)) {
-                $invoiceNumbersWithHistory[$invoice['InvoiceNumber']] = $statesResult;
+                $invoiceNumbersWithHistory[$invoice['InvoiceNumber']] = $this->sortArrayOfStatesByDateAsc($statesResult);
             }
         }
 
