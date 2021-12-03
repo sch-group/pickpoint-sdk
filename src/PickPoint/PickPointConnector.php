@@ -778,7 +778,7 @@ class PickPointConnector implements DeliveryConnector
      * @param array $states
      * @return array
      */
-    public function sortArrayOfStatesByDateAsc(array $states): array
+    private function sortArrayOfStatesByDateAsc(array $states): array
     {
         usort($states, function (State $a, State $b) {
             if ($a->getChangeDate() === $b->getChangeDate()) {
